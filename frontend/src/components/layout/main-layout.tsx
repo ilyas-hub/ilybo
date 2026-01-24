@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { Navbar } from './navbar'
 import { Footer } from './footer'
+import { BackToTop } from './back-to-top'
 
 interface MainLayoutProps {
   children: ReactNode
@@ -12,6 +13,7 @@ export function MainLayout({ children }: MainLayoutProps) {
       <Navbar />
       <main className="flex-1">{children}</main>
       <Footer />
+      <BackToTop />
     </div>
   )
 }
