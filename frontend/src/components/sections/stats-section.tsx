@@ -1,0 +1,81 @@
+import { useRef, useEffect, useState } from 'react'
+import { motion, useInView } from 'motion/react'
+import { Award, Users, Zap, Clock } from 'lucide-react'
+
+const STATS = [
+  { icon: Clock, value: 5, suffix: '+', label: 'Years Experience' },
+  { icon: Zap, value: 50, suffix: '+', label: 'Projects Delivered' },
+  { icon: Users, value: 30, suffix: '+', label: 'Happy Clients' },
+  { icon: Award, value: 99, suffix: '%', label: 'Client Satisfaction' },
+]
+
+function AnimatedCounter({ value, suffix, isInView }: { value: number; suffix: string; isInView: boolean }) {
+  const [count, setCount] = useState(0)
+
+  useEffect(() => {
+    if (!isInView) return
+
+    let start = 0
+    const end = value
+    const duration = 2000
+    const increment = end / (duration / 16)
+
+    const timer = setInterval(() => {
+      start += increment
+      if (start >= end) {
+        setCount(end)
+        clearInterval(timer)
+      } else {
+        setCount(Math.floor(start))
+      }
+    }, 16)
+
+    return () => clearInterval(timer)
+  }, [isInView, value])
+
+  return (
+    <span>
+      {count}
+      {suffix}
+    </span>
+  )
+}
+
+export function StatsSection() {
+  const sectionRef = useRef<HTMLElement>(null)
+  const isInView = useInView(sectionRef, { once: true, margin: '-100px' })
+
+  return (
+    <section
+      ref={sectionRef}
+      className="relative overflow-hidden bg-white py-16 lg:py-20"
+    >
+      <div className="container relative mx-auto px-4">
+        <div className="grid grid-cols-2 gap-6 md:grid-cols-4 lg:gap-8">
+          {STATS.map((stat, index) => {
+            const Icon = stat.icon
+            return (
+              <motion.div
+                key={stat.label}
+                className="text-center"
+                initial={{ opacity: 0, y: 30 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary">
+                  <Icon className="h-8 w-8 text-secondary" />
+                </div>
+                <div className="text-4xl font-black text-secondary md:text-5xl lg:text-6xl">
+                  <AnimatedCounter value={stat.value} suffix={stat.suffix} isInView={isInView} />
+                </div>
+                <p className="mt-2 text-sm font-medium text-black/70 md:text-base">
+                  {stat.label}
+                </p>
+              </motion.div>
+            )
+          })}
+        </div>
+      </div>
+    </section>
+  )
+}

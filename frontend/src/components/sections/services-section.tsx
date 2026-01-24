@@ -11,65 +11,48 @@ import {
   ArrowRight,
 } from 'lucide-react'
 import { motion, useInView } from 'motion/react'
-import { Card, CardHeader, CardTitle, CardDescription } from '@/lib/ui'
-import { cn } from '@/lib/utils'
+import { openProjectWizard } from './project-wizard-section'
 
 const SERVICES = [
   {
     icon: Globe,
     title: 'Web Development',
-    description:
-      'Custom web applications built with modern frameworks and best practices for optimal performance.',
-    color: 'group-hover:bg-secondary group-hover:text-secondary-foreground',
+    description: 'Custom web applications built with modern frameworks.',
   },
   {
     icon: Smartphone,
-    title: 'Mobile App Development',
-    description:
-      'Native and cross-platform mobile applications that deliver exceptional user experiences.',
-    color: 'group-hover:bg-primary group-hover:text-primary-foreground',
+    title: 'Mobile Apps',
+    description: 'Native and cross-platform mobile applications.',
   },
   {
     icon: Palette,
     title: 'UI/UX Design',
-    description:
-      'User-centered design that combines aesthetics with functionality for intuitive interfaces.',
-    color: 'group-hover:bg-accent group-hover:text-accent-foreground',
+    description: 'User-centered design that combines aesthetics with functionality.',
   },
   {
     icon: Cloud,
     title: 'Cloud Solutions',
-    description:
-      'Scalable cloud infrastructure and migration services for modern businesses.',
-    color: 'group-hover:bg-secondary group-hover:text-secondary-foreground',
+    description: 'Scalable cloud infrastructure and migration services.',
   },
   {
     icon: GitBranch,
-    title: 'DevOps & CI/CD',
-    description:
-      'Streamlined development workflows with automated testing and deployment pipelines.',
-    color: 'group-hover:bg-primary group-hover:text-primary-foreground',
+    title: 'DevOps',
+    description: 'Streamlined workflows with automated testing and deployment.',
   },
   {
     icon: Code2,
     title: 'Custom Software',
-    description:
-      'Tailored software solutions designed to address your unique business challenges.',
-    color: 'group-hover:bg-accent group-hover:text-accent-foreground',
+    description: 'Tailored solutions for your unique business challenges.',
   },
   {
     icon: Plug,
     title: 'API Integration',
-    description:
-      'Seamless integration of third-party services and APIs to extend your capabilities.',
-    color: 'group-hover:bg-secondary group-hover:text-secondary-foreground',
+    description: 'Seamless integration of third-party services and APIs.',
   },
   {
     icon: Users,
     title: 'Technical Consulting',
-    description:
-      'Expert guidance on technology strategy, architecture, and digital transformation.',
-    color: 'group-hover:bg-primary group-hover:text-primary-foreground',
+    description: 'Expert guidance on technology strategy and architecture.',
   },
 ]
 
@@ -77,132 +60,85 @@ export function ServicesSection() {
   const sectionRef = useRef<HTMLElement>(null)
   const isInView = useInView(sectionRef, { once: true, margin: '-100px' })
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  }
-
-  const cardVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5,
-        ease: 'easeOut',
-      },
-    },
-  }
-
   return (
     <section
       id="services"
       ref={sectionRef}
-      className="relative overflow-hidden bg-muted/30 py-20 lg:py-32"
+      className="relative overflow-hidden bg-primary py-16 lg:py-24"
     >
-      {/* Decorative elements */}
-      <motion.div
-        className="absolute -right-20 top-20 hidden lg:block"
-        initial={{ opacity: 0, rotate: 45 }}
-        animate={isInView ? { opacity: 0.1, rotate: 0 } : {}}
-        transition={{ duration: 1 }}
-      >
-        <svg
-          width="300"
-          height="300"
-          viewBox="0 0 300 300"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M150 50 L250 150 L150 250 L50 150 Z"
-            stroke="hsl(var(--secondary))"
-            strokeWidth="20"
-            fill="none"
-          />
-        </svg>
-      </motion.div>
-
-      <div className="container mx-auto px-4">
+      <div className="container relative mx-auto px-4">
         {/* Section header */}
         <motion.div
-          className="mb-16 text-center"
-          initial={{ opacity: 0, y: 30 }}
+          className="mb-12 text-center"
+          initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.5 }}
         >
-          <span className="mb-4 inline-block rounded-full bg-secondary/10 px-4 py-2 text-sm font-semibold text-secondary">
+          <span className="mb-3 inline-block rounded-full bg-secondary px-4 py-1.5 text-sm font-bold text-white">
             Our Services
           </span>
-          <h2 className="text-3xl font-black uppercase tracking-tight sm:text-4xl md:text-5xl">
-            What We
-            <span className="text-primary"> Build</span>
+          <h2 className="text-3xl font-black tracking-tight text-black sm:text-4xl md:text-5xl">
+            What We Build
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
-            Comprehensive software development services to bring your vision to
-            life
+          <p className="mx-auto mt-4 max-w-2xl text-black/70">
+            Comprehensive software development services to bring your vision to life
           </p>
         </motion.div>
 
-        {/* Services grid with staggered animation */}
-        <motion.div
-          className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
-          variants={containerVariants}
-          initial="hidden"
-          animate={isInView ? 'visible' : 'hidden'}
-        >
-          {SERVICES.map((service, index) => (
-            <motion.div key={service.title} variants={cardVariants}>
-              <Card className="group h-full cursor-pointer border-2 border-transparent bg-card transition-all duration-300 hover:-translate-y-2 hover:border-secondary hover:shadow-xl">
-                <CardHeader className="space-y-4">
-                  <motion.div
-                    className={cn(
-                      'inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-muted transition-all duration-300',
-                      service.color
-                    )}
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                  >
-                    <service.icon className="h-7 w-7" />
-                  </motion.div>
-                  <CardTitle className="text-xl font-bold">
-                    {service.title}
-                  </CardTitle>
-                  <CardDescription className="text-sm leading-relaxed">
-                    {service.description}
-                  </CardDescription>
-                  <div className="flex items-center gap-2 text-sm font-semibold text-secondary opacity-0 transition-opacity group-hover:opacity-100">
-                    Learn more <ArrowRight className="h-4 w-4" />
-                  </div>
-                </CardHeader>
-              </Card>
-            </motion.div>
-          ))}
-        </motion.div>
+        {/* Services grid */}
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {SERVICES.map((service, index) => {
+            const Icon = service.icon
+            return (
+              <motion.div
+                key={service.title}
+                className="group cursor-pointer rounded-2xl bg-white p-6 shadow-sm transition-all"
+                initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+                transition={{
+                  duration: 0.5,
+                  delay: index * 0.08,
+                  type: 'spring',
+                  stiffness: 100
+                }}
+                whileHover={{
+                  y: -8,
+                  scale: 1.02,
+                  boxShadow: '0 20px 40px rgba(0,0,0,0.1)'
+                }}
+              >
+                <motion.div
+                  className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-secondary/10"
+                  whileHover={{ rotate: 5, scale: 1.1 }}
+                  transition={{ type: 'spring', stiffness: 300 }}
+                >
+                  <Icon className="h-6 w-6 text-secondary" />
+                </motion.div>
+                <h3 className="text-lg font-bold text-black group-hover:text-secondary transition-colors">
+                  {service.title}
+                </h3>
+                <p className="mt-2 text-sm text-black/60">{service.description}</p>
+              </motion.div>
+            )
+          })}
+        </div>
 
         {/* CTA */}
         <motion.div
-          className="mt-16 text-center"
-          initial={{ opacity: 0, y: 30 }}
+          className="mt-12 text-center"
+          initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.8 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
         >
-          <p className="mb-6 text-lg text-muted-foreground">
-            Don't see what you need? We offer custom solutions too.
-          </p>
-          <motion.a
-            href="#contact"
-            className="inline-flex items-center gap-2 rounded-full bg-accent px-8 py-4 font-semibold text-accent-foreground shadow-lg transition-all hover:bg-accent/90 hover:shadow-xl"
+          <motion.button
+            onClick={openProjectWizard}
+            className="inline-flex items-center gap-2 rounded-full bg-secondary px-8 py-4 font-bold text-white transition-colors hover:bg-secondary/90"
             whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            whileTap={{ scale: 0.98 }}
           >
             Let's Talk About Your Project
             <ArrowRight className="h-5 w-5" />
-          </motion.a>
+          </motion.button>
         </motion.div>
       </div>
     </section>

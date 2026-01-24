@@ -1,175 +1,182 @@
 import { useState, useEffect } from 'react'
-import { Link } from '@tanstack/react-router'
-import { Menu, Moon, Sun } from 'lucide-react'
+import { Menu, X, ArrowRight } from 'lucide-react'
+import { motion, AnimatePresence } from 'motion/react'
 import { Button } from '@/lib/ui'
-import { Sheet, SheetContent, SheetTrigger } from '@/lib/ui'
-import { useTheme } from '@/lib/design-system/theme/theme-provider'
 import { NAV_LINKS } from '@/shared/constants/navigation'
 import { cn } from '@/lib/utils'
+import { Logo, LogoText } from '@/components/brand'
+import { openProjectWizard } from '@/components/sections/project-wizard-section'
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
-  const { theme, setTheme } = useTheme()
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10)
+      setIsScrolled(window.scrollY > 50)
     }
 
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const toggleTheme = () => {
-    setTheme(theme === 'dark' ? 'light' : 'dark')
-  }
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [isOpen])
 
   return (
-    <header
-      className={cn(
-        'fixed top-0 z-50 w-full transition-all duration-300',
-        isScrolled
-          ? 'border-b bg-background/95 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/60'
-          : 'bg-transparent'
-      )}
-    >
-      <nav className="container mx-auto flex h-20 items-center justify-between px-4">
-        {/* Left nav links */}
-        <div className="hidden items-center gap-8 md:flex">
-          {NAV_LINKS.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className={cn(
-                'text-sm font-semibold uppercase tracking-wide transition-colors',
-                isScrolled
-                  ? 'text-foreground hover:text-secondary'
-                  : 'text-primary-foreground hover:text-secondary'
-              )}
-            >
-              {link.label}
-            </a>
-          ))}
-        </div>
-
-        {/* Logo - Center */}
-        <a href="/" className="flex items-center">
-          <span
-            className={cn(
-              'text-2xl font-black tracking-tight transition-colors',
-              isScrolled ? 'text-foreground' : 'text-primary-foreground'
-            )}
+    <>
+      <motion.header
+        className={cn(
+          'fixed top-0 z-50 w-full transition-all duration-300',
+          isScrolled
+            ? 'bg-white shadow-md'
+            : 'bg-transparent'
+        )}
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <nav className="container mx-auto flex h-20 items-center justify-between px-4">
+          {/* Logo - Left */}
+          <motion.a
+            href="/"
+            className="flex items-center gap-2"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 17 }}
           >
-            ilybo
-          </span>
-        </a>
+            <Logo size="md" animated />
+            <LogoText className="text-2xl" scrolled={isScrolled} />
+          </motion.a>
 
-        {/* Right side */}
-        <div className="hidden items-center gap-4 md:flex">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleTheme}
-            className={cn(
-              isScrolled
-                ? 'text-foreground hover:bg-muted'
-                : 'text-primary-foreground hover:bg-primary-foreground/10'
-            )}
-          >
-            <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-            <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-            <span className="sr-only">Toggle theme</span>
-          </Button>
-
-          <Button
-            variant="outline"
-            className={cn(
-              'rounded-full border-2 px-6 font-semibold transition-all',
-              isScrolled
-                ? 'border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground'
-                : 'border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground'
-            )}
-            asChild
-          >
-            <Link to="/login">Login</Link>
-          </Button>
-
-          <Button
-            className="rounded-full bg-secondary px-6 font-semibold text-secondary-foreground shadow-md transition-all hover:bg-secondary/90 hover:shadow-lg"
-            asChild
-          >
-            <Link to="/signup">Get Started</Link>
-          </Button>
-        </div>
-
-        {/* Mobile */}
-        <div className="flex items-center gap-2 md:hidden">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleTheme}
-            className={cn(
-              isScrolled
-                ? 'text-foreground'
-                : 'text-primary-foreground hover:bg-primary-foreground/10'
-            )}
-          >
-            <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-            <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-            <span className="sr-only">Toggle theme</span>
-          </Button>
-
-          <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <SheetTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
+          {/* Center nav links */}
+          <div className="hidden items-center gap-8 lg:flex">
+            {NAV_LINKS.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
                 className={cn(
-                  isScrolled
-                    ? 'text-foreground'
-                    : 'text-primary-foreground hover:bg-primary-foreground/10'
+                  'group relative text-sm font-bold uppercase tracking-wide transition-colors hover:text-secondary',
+                  isScrolled ? 'text-black' : 'text-black'
                 )}
               >
-                <Menu className="h-6 w-6" />
-                <span className="sr-only">Toggle menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-[300px] bg-primary">
-              <div className="flex flex-col space-y-6 pt-12">
-                {NAV_LINKS.map((link) => (
-                  <a
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setIsOpen(false)}
-                    className="text-xl font-bold uppercase text-primary-foreground transition-colors hover:text-secondary"
-                  >
-                    {link.label}
-                  </a>
-                ))}
-                <hr className="border-primary-foreground/20" />
-                <Button
-                  variant="outline"
-                  className="w-full rounded-full border-2 border-secondary font-semibold text-secondary"
-                  asChild
+                {link.label}
+                <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-secondary transition-all duration-300 group-hover:w-full" />
+              </a>
+            ))}
+          </div>
+
+          {/* Right side - CTA */}
+          <div className="hidden items-center gap-4 lg:flex">
+            <Button
+              onClick={openProjectWizard}
+              className="rounded-full bg-secondary px-6 font-bold text-white shadow-md transition-all hover:bg-secondary/90 hover:shadow-lg"
+            >
+              Get Started
+              <ArrowRight className="ml-1 h-4 w-4" />
+            </Button>
+          </div>
+
+          {/* Mobile menu button */}
+          <div className="flex items-center gap-2 lg:hidden">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsOpen(true)}
+              className={cn(
+                'rounded-full hover:bg-black/10',
+                isScrolled ? 'text-black' : 'text-black'
+              )}
+            >
+              <Menu className="h-6 w-6" />
+              <span className="sr-only">Toggle menu</span>
+            </Button>
+          </div>
+        </nav>
+      </motion.header>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            <motion.div
+              className="fixed inset-0 z-50 bg-black/50"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsOpen(false)}
+            />
+
+            <motion.div
+              className="fixed right-0 top-0 z-50 h-screen w-[300px] bg-white shadow-2xl"
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            >
+              {/* Mobile header */}
+              <div className="flex items-center justify-between border-b border-black/10 px-6 py-5">
+                <div className="flex items-center gap-2">
+                  <Logo size="sm" animated={false} />
+                  <LogoText className="text-xl" />
+                </div>
+                <button
+                  className="rounded-full p-2 text-black hover:bg-black/10"
+                  onClick={() => setIsOpen(false)}
                 >
-                  <Link to="/login" onClick={() => setIsOpen(false)}>
-                    Login
-                  </Link>
-                </Button>
-                <Button
-                  className="w-full rounded-full bg-secondary font-semibold text-secondary-foreground"
-                  asChild
-                >
-                  <Link to="/signup" onClick={() => setIsOpen(false)}>
-                    Get Started
-                  </Link>
-                </Button>
+                  <X className="h-6 w-6" />
+                </button>
               </div>
-            </SheetContent>
-          </Sheet>
-        </div>
-      </nav>
-    </header>
+
+              <div className="flex h-full flex-col px-6 pt-6">
+                <div className="space-y-1">
+                  {NAV_LINKS.map((link, index) => (
+                    <motion.a
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center justify-between rounded-xl px-4 py-3 text-lg font-bold uppercase text-black transition-colors hover:bg-primary"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                    >
+                      {link.label}
+                      <ArrowRight className="h-4 w-4 opacity-50" />
+                    </motion.a>
+                  ))}
+                </div>
+
+                <hr className="my-6 border-black/10" />
+
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                >
+                  <Button
+                    className="w-full rounded-full bg-secondary py-5 text-base font-bold text-white hover:bg-secondary/90"
+                    onClick={() => {
+                      setIsOpen(false)
+                      openProjectWizard()
+                    }}
+                  >
+                    Get Started
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </motion.div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </>
   )
 }
