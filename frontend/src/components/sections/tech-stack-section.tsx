@@ -20,8 +20,6 @@ import {
   SiAngular,
   SiDjango,
 } from 'react-icons/si'
-import { ArrowRight } from 'lucide-react'
-import { openProjectWizard } from './project-wizard-section'
 
 // Main techs for static grid (2 rows x 7 = 14)
 const MAIN_TECHS = [
@@ -149,18 +147,23 @@ export function TechStackSection() {
                   duration: 0.4,
                   delay: index * 0.03,
                 }}
+                whileHover={{ scale: 1.1, y: -5 }}
               >
                 <motion.div
-                  animate={{ y: [0, -6, 0] }}
+                  animate={{
+                    y: [0, -6, 0],
+                    rotate: [0, 3, -3, 0],
+                  }}
                   transition={{
                     duration: 2,
                     repeat: Infinity,
                     delay: index * 0.1,
                     ease: 'easeInOut',
                   }}
+                  whileHover={{ rotate: 15, scale: 1.2 }}
                 >
                   <Icon
-                    className="h-10 w-10 transition-transform group-hover:scale-110 md:h-12 md:w-12"
+                    className="h-10 w-10 transition-transform md:h-12 md:w-12"
                     style={{ color: tech.color }}
                   />
                 </motion.div>
@@ -181,22 +184,6 @@ export function TechStackSection() {
         >
           <TechMarquee techs={MARQUEE_TECHS_1} direction="left" speed={30} />
           <TechMarquee techs={MARQUEE_TECHS_2} direction="right" speed={35} />
-        </motion.div>
-
-        {/* CTA */}
-        <motion.div
-          className="mt-12 text-center"
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5, delay: 0.4 }}
-        >
-          <button
-            onClick={openProjectWizard}
-            className="inline-flex items-center gap-2 rounded-full bg-secondary px-8 py-4 font-bold text-white transition-all hover:bg-secondary/90"
-          >
-            Start Your Project
-            <ArrowRight className="h-5 w-5" />
-          </button>
         </motion.div>
       </div>
     </section>

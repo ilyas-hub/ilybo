@@ -1,13 +1,18 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { Mail, MapPin, Phone, Send, ArrowRight } from 'lucide-react'
+import { motion, useInView } from 'motion/react'
 import {
   Button,
   Input,
   Textarea,
   Label,
 } from '@/lib/ui'
+import { useContactInfo } from '@/features/cms'
 
 export function ContactSection() {
+  const { contact, isLoading } = useContactInfo()
+  const sectionRef = useRef<HTMLElement>(null)
+  const isInView = useInView(sectionRef, { once: true, margin: '-100px' })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
@@ -51,10 +56,15 @@ export function ContactSection() {
   }
 
   return (
-    <section id="contact" className="relative overflow-hidden bg-primary py-20 lg:py-32">
+    <section id="contact" ref={sectionRef} className="relative overflow-hidden bg-primary py-20 lg:py-32">
       <div className="container relative mx-auto px-4">
         {/* Section header */}
-        <div className="mb-16 text-center">
+        <motion.div
+          className="mb-16 text-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5 }}
+        >
           <span className="mb-4 inline-block rounded-full bg-secondary px-4 py-2 text-sm font-bold text-white">
             Get In Touch
           </span>
@@ -64,49 +74,93 @@ export function ContactSection() {
           <p className="mx-auto mt-4 max-w-2xl text-lg text-black/70">
             Ready to start your project? Contact us today for a free consultation.
           </p>
-        </div>
+        </motion.div>
 
         <div className="grid gap-8 lg:grid-cols-3">
           {/* Contact info */}
           <div className="space-y-4">
-            <div className="rounded-2xl bg-white p-6 shadow-sm">
+            <motion.div
+              className="rounded-2xl bg-white p-6 shadow-sm"
+              initial={{ opacity: 0, x: -20 }}
+              animate={isInView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              whileHover={{ scale: 1.02, y: -5 }}
+            >
               <div className="flex items-center gap-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-secondary text-white">
+                <motion.div
+                  className="flex h-12 w-12 items-center justify-center rounded-xl bg-secondary text-white"
+                  animate={{ rotate: [0, 5, -5, 0] }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                >
                   <Mail className="h-6 w-6" />
-                </div>
+                </motion.div>
                 <div>
                   <p className="font-bold text-black">Email</p>
-                  <p className="text-sm text-black/60">hello@ilybo.com</p>
+                  <p className="text-sm text-black/60">
+                    {isLoading ? '...' : contact?.email || 'hello@ilybo.com'}
+                  </p>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
-            <div className="rounded-2xl bg-white p-6 shadow-sm">
+            <motion.div
+              className="rounded-2xl bg-white p-6 shadow-sm"
+              initial={{ opacity: 0, x: -20 }}
+              animate={isInView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              whileHover={{ scale: 1.02, y: -5 }}
+            >
               <div className="flex items-center gap-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-secondary text-white">
+                <motion.div
+                  className="flex h-12 w-12 items-center justify-center rounded-xl bg-secondary text-white"
+                  animate={{ scale: [1, 1.1, 1] }}
+                  transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+                >
                   <Phone className="h-6 w-6" />
-                </div>
+                </motion.div>
                 <div>
                   <p className="font-bold text-black">Phone</p>
-                  <p className="text-sm text-black/60">+91 98765 43210</p>
+                  <p className="text-sm text-black/60">
+                    {isLoading ? '...' : contact?.phone || '+91 98765 43210'}
+                  </p>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
-            <div className="rounded-2xl bg-white p-6 shadow-sm">
+            <motion.div
+              className="rounded-2xl bg-white p-6 shadow-sm"
+              initial={{ opacity: 0, x: -20 }}
+              animate={isInView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              whileHover={{ scale: 1.02, y: -5 }}
+            >
               <div className="flex items-center gap-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-secondary text-white">
+                <motion.div
+                  className="flex h-12 w-12 items-center justify-center rounded-xl bg-secondary text-white"
+                  animate={{ y: [0, -5, 0] }}
+                  transition={{ duration: 2, repeat: Infinity, delay: 1 }}
+                >
                   <MapPin className="h-6 w-6" />
-                </div>
+                </motion.div>
                 <div>
                   <p className="font-bold text-black">Location</p>
-                  <p className="text-sm text-black/60">Mumbai, India</p>
+                  <p className="text-sm text-black/60">
+                    {isLoading ? '...' : contact?.address
+                      ? `${contact.address.city}, ${contact.address.country}`
+                      : 'Mumbai, India'}
+                  </p>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
             {/* Quick CTA */}
-            <div className="rounded-2xl bg-secondary p-6">
+            <motion.div
+              className="rounded-2xl bg-secondary p-6"
+              initial={{ opacity: 0, x: -20 }}
+              animate={isInView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              whileHover={{ scale: 1.02 }}
+            >
               <h3 className="text-lg font-bold text-white">Prefer a quick call?</h3>
               <p className="mt-2 text-sm text-white/70">
                 Schedule a 15-minute discovery call with our team.
@@ -115,13 +169,24 @@ export function ContactSection() {
                 href="#"
                 className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-primary hover:underline"
               >
-                Book a call <ArrowRight className="h-4 w-4" />
+                Book a call
+                <motion.span
+                  animate={{ x: [0, 5, 0] }}
+                  transition={{ duration: 1, repeat: Infinity }}
+                >
+                  <ArrowRight className="h-4 w-4" />
+                </motion.span>
               </a>
-            </div>
+            </motion.div>
           </div>
 
           {/* Contact form */}
-          <div className="rounded-3xl bg-white p-8 shadow-xl lg:col-span-2">
+          <motion.div
+            className="rounded-3xl bg-white p-8 shadow-xl lg:col-span-2"
+            initial={{ opacity: 0, y: 30 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
             <h3 className="mb-2 text-2xl font-bold text-black">Send us a Message</h3>
             <p className="mb-6 text-black/60">
               Fill out the form below and we'll get back to you within 24 hours.
@@ -187,23 +252,31 @@ export function ContactSection() {
                   className="rounded-xl border-2 border-black/10 bg-primary/20 focus:border-secondary"
                 />
               </div>
-              <Button
-                type="submit"
-                size="lg"
-                className="w-full rounded-xl bg-secondary py-6 text-lg font-bold text-white shadow-lg transition-all hover:bg-secondary/90 hover:shadow-xl"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? (
-                  'Sending...'
-                ) : (
-                  <>
-                    Send Message
-                    <Send className="ml-2 h-5 w-5" />
-                  </>
-                )}
-              </Button>
+              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                <Button
+                  type="submit"
+                  size="lg"
+                  className="w-full rounded-xl bg-secondary py-6 text-lg font-bold text-white shadow-lg transition-all hover:bg-secondary/90 hover:shadow-xl"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    'Sending...'
+                  ) : (
+                    <>
+                      Send Message
+                      <motion.span
+                        className="ml-2"
+                        animate={{ x: [0, 5, 0], y: [0, -3, 0] }}
+                        transition={{ duration: 1.5, repeat: Infinity }}
+                      >
+                        <Send className="h-5 w-5" />
+                      </motion.span>
+                    </>
+                  )}
+                </Button>
+              </motion.div>
             </form>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

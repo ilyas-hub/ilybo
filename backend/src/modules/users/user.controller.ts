@@ -19,7 +19,7 @@ export async function getUsers(
 }
 
 export async function getUser(
-  req: Request,
+  req: Request<{ id: string }>,
   res: Response,
   next: NextFunction
 ): Promise<void> {
@@ -32,7 +32,7 @@ export async function getUser(
 }
 
 export async function updateUser(
-  req: Request,
+  req: Request<{ id: string }>,
   res: Response,
   next: NextFunction
 ): Promise<void> {
@@ -45,7 +45,7 @@ export async function updateUser(
 }
 
 export async function deleteUser(
-  req: Request,
+  req: Request<{ id: string }>,
   res: Response,
   next: NextFunction
 ): Promise<void> {

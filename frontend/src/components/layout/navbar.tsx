@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'motion/react'
 import { Button } from '@/lib/ui'
 import { NAV_LINKS } from '@/shared/constants/navigation'
 import { cn } from '@/lib/utils'
-import { Logo, LogoText } from '@/components/brand'
+import { LogoText } from '@/components/brand'
 import { openProjectWizard } from '@/components/sections/project-wizard-section'
 
 export function Navbar() {
@@ -35,27 +35,20 @@ export function Navbar() {
     <>
       <motion.header
         className={cn(
-          'fixed top-0 z-50 w-full transition-all duration-300',
+          'fixed top-0 z-50 w-full transition-all duration-500',
           isScrolled
-            ? 'bg-white shadow-md'
-            : 'bg-transparent'
+            ? 'bg-black shadow-lg'
+            : 'bg-primary'
         )}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.5 }}
       >
         <nav className="container mx-auto flex h-20 items-center justify-between px-4">
-          {/* Logo - Left */}
-          <motion.a
-            href="/"
-            className="flex items-center gap-2"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            transition={{ type: 'spring', stiffness: 400, damping: 17 }}
-          >
-            <Logo size="md" animated />
-            <LogoText className="text-2xl" scrolled={isScrolled} />
-          </motion.a>
+          {/* Logo */}
+          <a href="/" className="flex items-center">
+            <LogoText className="text-3xl" variant={isScrolled ? 'dark' : 'light'} />
+          </a>
 
           {/* Center nav links */}
           <div className="hidden items-center gap-8 lg:flex">
@@ -64,8 +57,10 @@ export function Navbar() {
                 key={link.href}
                 href={link.href}
                 className={cn(
-                  'group relative text-sm font-bold uppercase tracking-wide transition-colors hover:text-secondary',
-                  isScrolled ? 'text-black' : 'text-black'
+                  'group relative text-sm font-bold uppercase tracking-wide transition-colors',
+                  isScrolled
+                    ? 'text-primary hover:text-secondary'
+                    : 'text-black hover:text-secondary'
                 )}
               >
                 {link.label}
@@ -78,7 +73,12 @@ export function Navbar() {
           <div className="hidden items-center gap-4 lg:flex">
             <Button
               onClick={openProjectWizard}
-              className="rounded-full bg-secondary px-6 font-bold text-white shadow-md transition-all hover:bg-secondary/90 hover:shadow-lg"
+              className={cn(
+                'rounded-full px-6 font-bold shadow-md transition-all hover:shadow-lg',
+                isScrolled
+                  ? 'bg-secondary text-white hover:bg-secondary/90'
+                  : 'bg-black text-white hover:bg-black/90'
+              )}
             >
               Get Started
               <ArrowRight className="ml-1 h-4 w-4" />
@@ -92,8 +92,10 @@ export function Navbar() {
               size="icon"
               onClick={() => setIsOpen(true)}
               className={cn(
-                'rounded-full hover:bg-black/10',
-                isScrolled ? 'text-black' : 'text-black'
+                'rounded-full',
+                isScrolled
+                  ? 'text-primary hover:bg-white/10'
+                  : 'text-black hover:bg-black/10'
               )}
             >
               <Menu className="h-6 w-6" />
@@ -124,9 +126,8 @@ export function Navbar() {
             >
               {/* Mobile header */}
               <div className="flex items-center justify-between border-b border-black/10 px-6 py-5">
-                <div className="flex items-center gap-2">
-                  <Logo size="sm" animated={false} />
-                  <LogoText className="text-xl" />
+                <div className="flex items-center">
+                  <LogoText className="text-2xl" />
                 </div>
                 <button
                   className="rounded-full p-2 text-black hover:bg-black/10"

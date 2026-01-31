@@ -66,3 +66,42 @@ export async function me(
     next(error)
   }
 }
+
+export async function requestPasswordReset(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const result = await authService.requestPasswordReset(req.body)
+    sendSuccess(res, result)
+  } catch (error) {
+    next(error)
+  }
+}
+
+export async function verifyOTP(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const result = await authService.verifyOTP(req.body)
+    sendSuccess(res, result)
+  } catch (error) {
+    next(error)
+  }
+}
+
+export async function resetPassword(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const result = await authService.resetPassword(req.body)
+    sendSuccess(res, result)
+  } catch (error) {
+    next(error)
+  }
+}

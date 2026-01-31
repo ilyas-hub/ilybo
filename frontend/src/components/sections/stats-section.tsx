@@ -61,10 +61,23 @@ export function StatsSection() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
+                whileHover={{ scale: 1.05 }}
               >
-                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary">
+                <motion.div
+                  className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary"
+                  animate={{
+                    y: [0, -8, 0],
+                    rotate: [0, 5, -5, 0],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    delay: index * 0.3,
+                  }}
+                  whileHover={{ scale: 1.1, rotate: 10 }}
+                >
                   <Icon className="h-8 w-8 text-secondary" />
-                </div>
+                </motion.div>
                 <div className="text-4xl font-black text-secondary md:text-5xl lg:text-6xl">
                   <AnimatedCounter value={stat.value} suffix={stat.suffix} isInView={isInView} />
                 </div>

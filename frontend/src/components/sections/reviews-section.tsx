@@ -88,15 +88,26 @@ export function ReviewsSection() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.4, delay: index * 0.1 }}
+                whileHover={{ y: -8, scale: 1.02 }}
               >
                 {/* Quote icon */}
-                <Quote className="mb-4 h-10 w-10 text-secondary/30" />
+                <motion.div
+                  animate={{ rotate: [0, 5, -5, 0] }}
+                  transition={{ duration: 4, repeat: Infinity, delay: index * 0.3 }}
+                >
+                  <Quote className="mb-4 h-10 w-10 text-secondary/30" />
+                </motion.div>
 
                 {/* Header with avatar */}
                 <div className="mb-4 flex items-center gap-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary text-lg font-bold text-white">
+                  <motion.div
+                    className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary text-lg font-bold text-white"
+                    animate={{ scale: [1, 1.05, 1] }}
+                    transition={{ duration: 3, repeat: Infinity, delay: index * 0.2 }}
+                    whileHover={{ scale: 1.1 }}
+                  >
                     {review.image}
-                  </div>
+                  </motion.div>
                   <div>
                     <h4 className="font-bold text-secondary">{review.name}</h4>
                     <p className="text-sm text-black/50">{review.company}</p>
@@ -116,17 +127,19 @@ export function ReviewsSection() {
 
           {/* Navigation buttons */}
           <div className="mt-8 flex items-center justify-center gap-4">
-            <button
+            <motion.button
               onClick={prevSlide}
               className="flex h-12 w-12 items-center justify-center rounded-full bg-primary shadow-md transition-all hover:bg-secondary hover:text-white"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
             >
               <ChevronLeft className="h-6 w-6" />
-            </button>
+            </motion.button>
 
             {/* Dots */}
             <div className="flex gap-2">
               {REVIEWS.map((_, index) => (
-                <button
+                <motion.button
                   key={index}
                   onClick={() => setCurrentIndex(index)}
                   className={`h-2 rounded-full transition-all ${
@@ -134,16 +147,20 @@ export function ReviewsSection() {
                       ? 'w-8 bg-secondary'
                       : 'w-2 bg-black/20 hover:bg-black/40'
                   }`}
+                  whileHover={{ scale: 1.2 }}
+                  whileTap={{ scale: 0.9 }}
                 />
               ))}
             </div>
 
-            <button
+            <motion.button
               onClick={nextSlide}
               className="flex h-12 w-12 items-center justify-center rounded-full bg-primary shadow-md transition-all hover:bg-secondary hover:text-white"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
             >
               <ChevronRight className="h-6 w-6" />
-            </button>
+            </motion.button>
           </div>
         </div>
       </div>

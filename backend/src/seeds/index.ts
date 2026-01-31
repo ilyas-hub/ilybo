@@ -2,6 +2,7 @@ import { connectDatabase, env } from '../config/index.js'
 import { logger } from '../utils/index.js'
 import { seedServices } from './services.seed.js'
 import { seedAdmin } from './admin.seed.js'
+import { seedPages } from './pages.seed.js'
 import mongoose from 'mongoose'
 
 async function runSeeds(): Promise<void> {
@@ -17,6 +18,7 @@ async function runSeeds(): Promise<void> {
 
     await seedServices()
     await seedAdmin()
+    await seedPages()
 
     logger.info('All seeds completed successfully!')
   } catch (error) {

@@ -2,10 +2,16 @@ import 'dotenv/config'
 import { createApp } from './app.js'
 import { connectDatabase, env } from './config/index.js'
 import { logger } from './utils/index.js'
+import { seedAdmin } from './seeds/admin.seed.js'
 
 async function bootstrap(): Promise<void> {
   try {
     await connectDatabase()
+
+    // Auto-seed admin in development
+    if (env.NODE_ENV === 'development') {
+      await seedAdmin()
+    }
 
     const app = createApp()
 

@@ -56,7 +56,7 @@ const serviceSchema = new Schema<IService>(
   {
     timestamps: true,
     toJSON: {
-      transform(_doc, ret) {
+      transform(_doc, ret: Record<string, unknown>) {
         delete ret.__v
         return ret
       },
@@ -64,7 +64,7 @@ const serviceSchema = new Schema<IService>(
   }
 )
 
-serviceSchema.index({ slug: 1 })
+// Note: slug index already created by unique: true
 serviceSchema.index({ isActive: 1, order: 1 })
 
 export const Service = mongoose.model<IService>('Service', serviceSchema)

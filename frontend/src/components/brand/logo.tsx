@@ -138,20 +138,29 @@ export function Logo({ className, size = 'md', animated = true }: LogoProps) {
 // Text logo component - IlyBo with correct capitalization and animation
 export function LogoText({
   className,
-  scrolled = false,
+  scrolled: _scrolled = false,
   animated = true,
+  variant = 'light',
 }: {
   className?: string
   scrolled?: boolean
   animated?: boolean
+  variant?: 'light' | 'dark'
 }) {
+  void _scrolled // kept for backwards compatibility
   const letters = [
     { char: 'I', color: 'secondary', isSerif: true },
     { char: 'l', color: 'secondary', isSerif: false },
     { char: 'y', color: 'secondary', isSerif: false },
-    { char: 'B', color: 'black', isSerif: false },
-    { char: 'o', color: 'black', isSerif: false },
+    { char: 'B', color: 'primary', isSerif: false },
+    { char: 'o', color: 'primary', isSerif: false },
   ]
+
+  const getTextColor = (color: string) => {
+    if (color === 'secondary') return 'text-secondary'
+    if (variant === 'dark') return 'text-primary'
+    return 'text-black'
+  }
 
   return (
     <span className={cn('font-black tracking-tight', className)}>
@@ -160,7 +169,7 @@ export function LogoText({
           key={index}
           className={cn(
             'inline-block',
-            letter.color === 'secondary' ? 'text-secondary' : 'text-black',
+            getTextColor(letter.color),
             letter.isSerif && 'font-serif'
           )}
           style={letter.isSerif ? { fontFamily: 'Georgia, "Times New Roman", serif' } : undefined}

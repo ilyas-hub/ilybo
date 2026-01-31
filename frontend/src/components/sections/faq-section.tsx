@@ -182,12 +182,20 @@ export function FAQSection() {
           transition={{ duration: 0.5, delay: 0.3 }}
         >
           <p className="mb-4 text-black/70">Still have questions?</p>
-          <a
+          <motion.a
             href="#contact"
             className="inline-flex items-center gap-2 rounded-full bg-secondary px-8 py-4 font-bold text-white transition-all hover:bg-secondary/90"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.98 }}
           >
             Contact Us
-          </a>
+            <motion.span
+              animate={{ scale: [1, 1.2, 1] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+            >
+              💬
+            </motion.span>
+          </motion.a>
         </motion.div>
       </div>
     </section>

@@ -1,9 +1,18 @@
 import { FOOTER_LINKS } from '@/shared/constants/navigation'
-import { Github, Twitter, Linkedin, Send, MapPin, Phone, Mail } from 'lucide-react'
-import { Logo, LogoText } from '@/components/brand'
+import { Github, Twitter, Linkedin, Send, MapPin, Phone, Mail, Facebook, Instagram, Youtube, Globe } from 'lucide-react'
+import { LogoText } from '@/components/brand'
 import { useState } from 'react'
+import { useContactInfo, useSocialLinks } from '@/features/cms'
 
 const SOCIAL_ICONS: Record<string, typeof Twitter> = {
+  twitter: Twitter,
+  linkedin: Linkedin,
+  github: Github,
+  facebook: Facebook,
+  instagram: Instagram,
+  youtube: Youtube,
+  website: Globe,
+  // Legacy mappings for static links
   Twitter: Twitter,
   LinkedIn: Linkedin,
   GitHub: Github,
@@ -13,6 +22,8 @@ export function Footer() {
   const currentYear = new Date().getFullYear()
   const [email, setEmail] = useState('')
   const [isSubscribed, setIsSubscribed] = useState(false)
+  const { contact, company } = useContactInfo()
+  const { socialLinks } = useSocialLinks()
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault()
@@ -29,49 +40,52 @@ export function Footer() {
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
           <div className="space-y-5">
-            <a href="/" className="inline-flex items-center gap-2">
-              <Logo size="sm" animated={false} />
+            <a href="/" className="inline-flex items-center">
               <LogoText className="text-2xl" />
             </a>
             <p className="text-sm leading-relaxed text-black/70">
-              Building innovative software solutions that drive business growth
-              and digital transformation.
+              {company?.description || 'Building innovative software solutions that drive business growth and digital transformation.'}
             </p>
 
             {/* Contact info */}
             <div className="space-y-2">
               <a
-                href="mailto:hello@ilybo.com"
+                href={`mailto:${contact?.email || 'hello@ilybo.com'}`}
                 className="flex items-center gap-2 text-sm text-black/70 transition-colors hover:text-secondary"
               >
                 <Mail className="h-4 w-4" />
-                hello@ilybo.com
+                {contact?.email || 'hello@ilybo.com'}
               </a>
               <a
-                href="tel:+919876543210"
+                href={`tel:${contact?.phone?.replace(/\s/g, '') || '+919876543210'}`}
                 className="flex items-center gap-2 text-sm text-black/70 transition-colors hover:text-secondary"
               >
                 <Phone className="h-4 w-4" />
-                +91 98765 43210
+                {contact?.phone || '+91 98765 43210'}
               </a>
               <div className="flex items-center gap-2 text-sm text-black/70">
                 <MapPin className="h-4 w-4" />
-                Mumbai, India
+                {contact?.address
+                  ? `${contact.address.city}, ${contact.address.country}`
+                  : 'Mumbai, India'}
               </div>
             </div>
 
             {/* Social links */}
             <div className="flex gap-2">
-              {FOOTER_LINKS.social.map((link) => {
-                const Icon = SOCIAL_ICONS[link.label] || Twitter
+              {(socialLinks.length > 0 ? socialLinks : FOOTER_LINKS.social).map((link, index) => {
+                // Handle both dynamic (platform) and static (label) formats
+                const platform = 'platform' in link ? link.platform : link.label
+                const url = 'url' in link ? link.url : link.href
+                const Icon = SOCIAL_ICONS[platform] || Globe
                 return (
                   <a
-                    key={link.label}
-                    href={link.href}
+                    key={`${platform}-${index}`}
+                    href={url}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex h-9 w-9 items-center justify-center rounded-full bg-black/10 text-black transition-colors hover:bg-secondary hover:text-white"
-                    aria-label={link.label}
+                    aria-label={platform}
                   >
                     <Icon className="h-4 w-4" />
                   </a>

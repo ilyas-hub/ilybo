@@ -13,6 +13,13 @@ const envSchema = z.object({
   ADMIN_EMAIL: z.string().email().optional(),
   ADMIN_PASSWORD: z.string().min(8).optional(),
   FORCE_SEED: z.coerce.boolean().default(false),
+  // SMTP Configuration
+  SMTP_HOST: z.string().default('smtp.gmail.com'),
+  SMTP_PORT: z.coerce.number().default(587),
+  SMTP_USER: z.string().optional(),
+  SMTP_PASS: z.string().optional(),
+  SMTP_FROM_NAME: z.string().default('IlyBo'),
+  SMTP_FROM_EMAIL: z.string().email().default('noreply@ilybo.com'),
 })
 
 export const env = envSchema.parse(process.env)

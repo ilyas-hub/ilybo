@@ -12,3 +12,4 @@ export {
 export { sendSuccess, sendPaginated, sendCreated, sendNoContent } from './response.js'
 export { generateAccessToken, generateRefreshToken, verifyToken, generateTokens } from './jwt.js'
 export { hashPassword, comparePassword } from './password.js'
+export { generateOTP, hashOTP, verifyOTPHash, getOTPExpiry } from './otp.js'

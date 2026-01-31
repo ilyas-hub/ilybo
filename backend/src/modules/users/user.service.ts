@@ -77,3 +77,14 @@ export async function deleteUser(id: string): Promise<void> {
     throw new NotFoundError('User not found')
   }
 }
+
+export async function updatePassword(id: string, newPassword: string): Promise<void> {
+  const hashedPassword = await hashPassword(newPassword)
+  const user = await User.findByIdAndUpdate(id, {
+    password: hashedPassword,
+    refreshToken: null, // Invalidate all sessions
+  })
+  if (!user) {
+    throw new NotFoundError('User not found')
+  }
+}

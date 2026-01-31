@@ -45,7 +45,7 @@ const userSchema = new Schema<IUser>(
   {
     timestamps: true,
     toJSON: {
-      transform(_doc, ret) {
+      transform(_doc, ret: Record<string, unknown>) {
         delete ret.password
         delete ret.refreshToken
         delete ret.__v
@@ -55,6 +55,6 @@ const userSchema = new Schema<IUser>(
   }
 )
 
-userSchema.index({ email: 1 })
+// Note: email index already created by unique: true
 
 export const User = mongoose.model<IUser>('User', userSchema)

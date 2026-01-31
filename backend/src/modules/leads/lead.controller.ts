@@ -21,7 +21,7 @@ export async function getLeads(
 }
 
 export async function getLead(
-  req: Request,
+  req: Request<{ id: string }>,
   res: Response,
   next: NextFunction
 ): Promise<void> {
@@ -47,7 +47,7 @@ export async function createLead(
 }
 
 export async function updateLead(
-  req: Request,
+  req: Request<{ id: string }>,
   res: Response,
   next: NextFunction
 ): Promise<void> {
@@ -60,7 +60,7 @@ export async function updateLead(
 }
 
 export async function deleteLead(
-  req: Request,
+  req: Request<{ id: string }>,
   res: Response,
   next: NextFunction
 ): Promise<void> {

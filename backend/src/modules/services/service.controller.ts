@@ -17,7 +17,7 @@ export async function getServices(
 }
 
 export async function getService(
-  req: Request,
+  req: Request<{ slug: string }>,
   res: Response,
   next: NextFunction
 ): Promise<void> {
@@ -43,7 +43,7 @@ export async function createService(
 }
 
 export async function updateService(
-  req: Request,
+  req: Request<{ id: string }>,
   res: Response,
   next: NextFunction
 ): Promise<void> {
@@ -56,7 +56,7 @@ export async function updateService(
 }
 
 export async function deleteService(
-  req: Request,
+  req: Request<{ id: string }>,
   res: Response,
   next: NextFunction
 ): Promise<void> {
