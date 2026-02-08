@@ -4,20 +4,21 @@ import { motion } from 'motion/react'
 import { useState, useEffect } from 'react'
 import { openProjectWizard } from './project-wizard-section'
 
-// Professional code that demonstrates capability
+// Client-centric code showcasing secure & efficient delivery
 const CODE_LINES = [
-  { text: 'import { IlyBo } from "@ilybo/core";', delay: 0 },
+  { text: 'import { IlyBo } from "@ilybo/secure";', delay: 0 },
+  // { text: '', delay: 0 },
+  { text: 'async function launchClientApp() {', delay: 0 },
+  { text: '  const app = await IlyBo.init({', delay: 0 },
+  { text: '    client: "your-brand",', delay: 0 },
+  { text: '    security: "enterprise-grade",', delay: 0 },
+  { text: '    performance: "optimized",', delay: 0 },
+  { text: '  });', delay: 0 },
   { text: '', delay: 0 },
-  { text: 'async function buildProject() {', delay: 0 },
-  { text: '  const config = {', delay: 0 },
-  { text: '    name: "my-awesome-app",', delay: 0 },
-  { text: '    stack: ["React", "Node.js", "PostgreSQL"],', delay: 0 },
-  { text: '    features: ["auth", "payments", "dashboard"],', delay: 0 },
-  { text: '  };', delay: 0 },
-  { text: '', delay: 0 },
-  { text: '  const project = await IlyBo.create(config);', delay: 0 },
-  { text: '  await project.build();', delay: 0 },
-  { text: '  await project.deploy("production");', delay: 0 },
+  { text: '  await app.enableSSL();', delay: 0 },
+  { text: '  await app.addAuth("OAuth2 + MFA");', delay: 0 },
+  { text: '  await app.optimize({ caching: true, cdn: true });', delay: 0 },
+  { text: '  await app.deploy("production");', delay: 0 },
   { text: '}', delay: 0 },
 ]
 
@@ -128,6 +129,24 @@ function CodeEditor() {
     if (line.trim().startsWith('const ')) {
       const indent = line.match(/^(\s*)/)?.[1] || ''
       const rest = line.trim()
+      // const x = await Obj.method({
+      const awaitInit = rest.match(/^(const )(\w+)(\s*=\s*)(await )(\w+)\.(\w+)\((\{)$/)
+      if (awaitInit) {
+        return (
+          <>
+            <span className="text-white">{indent}</span>
+            <span className="text-[#569cd6]">{awaitInit[1]}</span>
+            <span className="text-[#9cdcfe]">{awaitInit[2]}</span>
+            <span className="text-white">{awaitInit[3]}</span>
+            <span className="text-[#c586c0]">{awaitInit[4]}</span>
+            <span className="text-[#9cdcfe]">{awaitInit[5]}</span>
+            <span className="text-white">.</span>
+            <span className="text-[#dcdcaa]">{awaitInit[6]}</span>
+            <span className="text-[#ffd700]">(</span>
+            <span className="text-white">{awaitInit[7]}</span>
+          </>
+        )
+      }
       const match = rest.match(/^(const )(\w+)(\s*=\s*)(.*)$/)
       if (match) {
         return (
@@ -162,23 +181,21 @@ function CodeEditor() {
       const indent = line.match(/^(\s*)/)?.[1] || ''
       const rest = line.trim()
 
-      if (rest.includes('.create(') || rest.includes('.build()') || rest.includes('.deploy(')) {
-        const match = rest.match(/^(await )(\w+)\.(\w+)\(([^)]*)\)(;?)$/)
-        if (match) {
-          return (
-            <>
-              <span className="text-white">{indent}</span>
-              <span className="text-[#c586c0]">{match[1]}</span>
-              <span className="text-[#9cdcfe]">{match[2]}</span>
-              <span className="text-white">.</span>
-              <span className="text-[#dcdcaa]">{match[3]}</span>
-              <span className="text-[#ffd700]">(</span>
-              {match[4] && <span className="text-[#ce9178]">{match[4]}</span>}
-              <span className="text-[#ffd700]">)</span>
-              <span className="text-white">{match[5]}</span>
-            </>
-          )
-        }
+      const awaitMatch = rest.match(/^(await )(\w+)\.(\w+)\((.*)\)(;?)$/)
+      if (awaitMatch) {
+        return (
+          <>
+            <span className="text-white">{indent}</span>
+            <span className="text-[#c586c0]">{awaitMatch[1]}</span>
+            <span className="text-[#9cdcfe]">{awaitMatch[2]}</span>
+            <span className="text-white">.</span>
+            <span className="text-[#dcdcaa]">{awaitMatch[3]}</span>
+            <span className="text-[#ffd700]">(</span>
+            {awaitMatch[4] && <span className="text-[#ce9178]">{awaitMatch[4]}</span>}
+            <span className="text-[#ffd700]">)</span>
+            <span className="text-white">{awaitMatch[5]}</span>
+          </>
+        )
       }
     }
 
@@ -243,7 +260,7 @@ function CodeEditor() {
 
       {/* Code */}
       <div className="relative min-h-[320px] overflow-hidden">
-        <div className="p-4 font-mono text-[13px] leading-6">
+        <div className="p-4 font-mono text-[15px] leading-7">
           {displayedLines.map((line, i) => (
             <div key={i} className="flex">
               <span className="mr-4 w-6 select-none text-right text-white/20">{i + 1}</span>
@@ -314,7 +331,7 @@ function CodeEditor() {
         <div className="p-4">
           <div className="flex items-center gap-2 font-mono text-xs">
             <span className="text-white/40">$</span>
-            <span className="text-[#28c840]">ilybo deploy --production</span>
+            <span className="text-[#28c840]">ilybo launch --secure --production</span>
           </div>
           <motion.div
             className="mt-3 flex items-center gap-2"
@@ -338,7 +355,7 @@ function CodeEditor() {
             transition={{ delay: 0.5 }}
           >
             <span>→</span>
-            <span>https://my-awesome-app.ilybo.dev</span>
+            <span>https://your-brand.ilybo.dev</span>
           </motion.div>
         </div>
       </motion.div>
@@ -467,7 +484,7 @@ export function HeroSection() {
 
           {/* Right - Code Editor */}
           <motion.div
-            className="relative mx-auto w-full max-w-[520px]"
+            className="relative mx-auto w-full max-w-[680px]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.3 }}

@@ -8,6 +8,7 @@ import { seedPortfolioProjects } from './portfolio-projects.seed.js'
 import { seedLeads } from './leads.seed.js'
 import { seedFAQs } from './faqs.seed.js'
 import { seedTestimonials } from './testimonials.seed.js'
+import { seedSettings } from './settings.seed.js'
 import mongoose from 'mongoose'
 
 async function runSeeds(): Promise<void> {
@@ -28,6 +29,7 @@ async function runSeeds(): Promise<void> {
     await seedLeads()
     await seedFAQs()
     await seedTestimonials()
+    await seedSettings()
 
     logger.info('All seeds completed successfully!')
   } catch (error) {

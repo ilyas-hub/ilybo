@@ -46,7 +46,7 @@ export function Navbar() {
           className={cn(
             'mx-auto flex items-center justify-between transition-all duration-700 ease-in-out',
             isScrolled
-              ? 'h-14 max-w-6xl rounded-full bg-black/85 px-8 shadow-2xl backdrop-blur-md'
+              ? 'h-14 max-w-6xl rounded-lg bg-black/85 px-8 shadow-2xl backdrop-blur-md'
               : 'h-20 bg-primary px-4'
           )}
         >

@@ -135,4 +135,21 @@ export const servicesData = [
     ],
     order: 8,
   },
+  {
+    name: 'AI & Machine Learning',
+    slug: 'ai-machine-learning',
+    description:
+      'We build intelligent solutions powered by AI and machine learning. From chatbots and recommendation engines to predictive analytics and computer vision, we help businesses harness the power of artificial intelligence to automate processes, gain insights, and create smarter products.',
+    shortDescription:
+      'Intelligent AI-powered solutions including chatbots, predictive analytics, and machine learning models.',
+    icon: 'Brain',
+    features: [
+      'AI Chatbots & Assistants',
+      'Predictive Analytics',
+      'Natural Language Processing',
+      'Computer Vision',
+      'ML Model Development',
+    ],
+    order: 9,
+  },
 ]

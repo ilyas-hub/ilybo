@@ -8,9 +8,10 @@ export const defaultSettings = {
     },
   },
   socialLinks: [
-    { platform: 'twitter', url: 'https://twitter.com/ilybo', isActive: true },
-    { platform: 'linkedin', url: 'https://linkedin.com/company/ilybo', isActive: true },
-    { platform: 'github', url: 'https://github.com/ilybo', isActive: true },
+    { platform: 'linkedin', url: 'https://www.linkedin.com/in/ilybo-dev-8309763ab/', isActive: true },
+    { platform: 'instagram', url: 'https://www.instagram.com/ilybo_dev', isActive: true },
+    { platform: 'facebook', url: 'https://www.facebook.com/share/1GFmg8AE9z/', isActive: true },
+    { platform: 'twitter', url: 'https://x.com/IlyBo37352', isActive: true },
   ],
   businessHours: [
     { day: 'Monday', open: '09:00', close: '18:00', isClosed: false },

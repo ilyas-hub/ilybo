@@ -19,8 +19,9 @@ export const FOOTER_LINKS = {
     { href: '#', label: 'Cloud Solutions' },
   ],
   social: [
-    { href: 'https://twitter.com', label: 'Twitter' },
-    { href: 'https://linkedin.com', label: 'LinkedIn' },
-    { href: 'https://github.com', label: 'GitHub' },
+    { href: 'https://www.linkedin.com/in/ilybo-dev-8309763ab/', label: 'LinkedIn' },
+    { href: 'https://www.instagram.com/ilybo_dev', label: 'Instagram' },
+    { href: 'https://www.facebook.com/share/1GFmg8AE9z/', label: 'Facebook' },
+    { href: 'https://x.com/IlyBo37352', label: 'Twitter' },
   ],
 } as const
