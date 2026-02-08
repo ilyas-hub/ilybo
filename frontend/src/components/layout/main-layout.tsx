@@ -2,7 +2,8 @@ import type { ReactNode } from 'react'
 import { Navbar } from './navbar'
 import { Footer } from './footer'
 import { BackToTop } from './back-to-top'
-import { FloatingCoffee } from '@/components/floating-coffee'
+import { FloatingContact } from '@/components/floating-contact'
+import { CookieConsent } from './cookie-consent'
 
 interface MainLayoutProps {
   children: ReactNode
@@ -15,7 +16,8 @@ export function MainLayout({ children }: MainLayoutProps) {
       <main className="flex-1">{children}</main>
       <Footer />
       <BackToTop />
-      <FloatingCoffee />
+      <FloatingContact />
+      <CookieConsent />
     </div>
   )
 }

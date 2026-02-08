@@ -1,8 +1,13 @@
+import 'dotenv/config'
 import { connectDatabase, env } from '../config/index.js'
 import { logger } from '../utils/index.js'
 import { seedServices } from './services.seed.js'
 import { seedAdmin } from './admin.seed.js'
 import { seedPages } from './pages.seed.js'
+import { seedPortfolioProjects } from './portfolio-projects.seed.js'
+import { seedLeads } from './leads.seed.js'
+import { seedFAQs } from './faqs.seed.js'
+import { seedTestimonials } from './testimonials.seed.js'
 import mongoose from 'mongoose'
 
 async function runSeeds(): Promise<void> {
@@ -19,6 +24,10 @@ async function runSeeds(): Promise<void> {
     await seedServices()
     await seedAdmin()
     await seedPages()
+    await seedPortfolioProjects()
+    await seedLeads()
+    await seedFAQs()
+    await seedTestimonials()
 
     logger.info('All seeds completed successfully!')
   } catch (error) {

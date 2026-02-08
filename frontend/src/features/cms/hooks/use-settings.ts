@@ -15,6 +15,8 @@ export function useContactInfo() {
     ...rest,
     contact: data?.data.contact,
     company: data?.data.company,
+    calendlyUrl: data?.data.calendlyUrl,
+    whatsapp: data?.data.contact?.whatsapp,
   }
 }
 
@@ -31,6 +33,14 @@ export function useBusinessHours() {
   return {
     ...rest,
     businessHours: data?.data.businessHours || [],
+  }
+}
+
+export function useAboutContent() {
+  const { data, ...rest } = useSettings()
+  return {
+    ...rest,
+    about: data?.data.about,
   }
 }
 

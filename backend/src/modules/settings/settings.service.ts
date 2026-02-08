@@ -5,6 +5,7 @@ const DEFAULT_SETTINGS = {
   contact: {
     email: 'hello@ilybo.com',
     phone: '+91 98765 43210',
+    whatsapp: '',
     address: {
       city: 'Mumbai',
       country: 'India',
@@ -33,6 +34,22 @@ const DEFAULT_SETTINGS = {
     defaultTitle: 'IlyBo - Software Development',
     defaultDescription: 'IlyBo offers professional software development services including web, mobile, and cloud solutions.',
   },
+  calendlyUrl: '',
+  about: {
+    stats: [
+      { icon: 'Award', value: '5+', label: 'Years of Excellence' },
+      { icon: 'Users', value: '30+', label: 'Happy Clients' },
+      { icon: 'Zap', value: '50+', label: 'Projects Delivered' },
+    ],
+    features: [
+      'Agile Development Methodology',
+      'Dedicated Project Managers',
+      'Transparent Communication',
+      'Quality Assurance at Every Step',
+      'Post-Launch Support',
+      'Scalable Solutions',
+    ],
+  },
 }
 
 export async function getSettings(): Promise<ISiteSettings> {
@@ -55,6 +72,7 @@ export async function updateSettings(
   if (data.contact) {
     if (data.contact.email) settings.contact.email = data.contact.email
     if (data.contact.phone) settings.contact.phone = data.contact.phone
+    if (data.contact.whatsapp !== undefined) settings.contact.whatsapp = data.contact.whatsapp
     if (data.contact.address) {
       if (data.contact.address.street !== undefined) settings.contact.address.street = data.contact.address.street
       if (data.contact.address.city) settings.contact.address.city = data.contact.address.city
@@ -86,6 +104,19 @@ export async function updateSettings(
   if (data.seo) {
     if (data.seo.defaultTitle !== undefined) settings.seo.defaultTitle = data.seo.defaultTitle
     if (data.seo.defaultDescription !== undefined) settings.seo.defaultDescription = data.seo.defaultDescription
+  }
+
+  if (data.calendlyUrl !== undefined) {
+    settings.calendlyUrl = data.calendlyUrl
+  }
+
+  if (data.about) {
+    if (data.about.stats) {
+      settings.about.stats = data.about.stats as typeof settings.about.stats
+    }
+    if (data.about.features) {
+      settings.about.features = data.about.features
+    }
   }
 
   settings.updatedBy = userId as unknown as typeof settings.updatedBy

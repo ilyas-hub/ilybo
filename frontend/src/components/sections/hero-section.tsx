@@ -371,7 +371,7 @@ export function HeroSection() {
                 <Rocket className="h-4 w-4 text-secondary" />
               </motion.span>
               <span className="text-sm font-medium text-black">
-                Trusted by 100+ businesses worldwide
+                Partnered with 100+ brands globally
               </span>
             </motion.div>
 
@@ -395,8 +395,8 @@ export function HeroSection() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              We transform your ideas into powerful software solutions. From
-              concept to launch, we're your trusted technology partner.
+              Your vision deserves more than code — it deserves a team that
+              thinks alongside you, from first sketch to final deploy.
             </motion.p>
 
             <motion.div

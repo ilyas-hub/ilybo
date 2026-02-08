@@ -11,6 +11,8 @@ import {
   Menu,
   X,
   ChevronRight,
+  HelpCircle,
+  Quote,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useAuthStore } from '@/features/auth'
@@ -21,6 +23,8 @@ const navItems = [
   { href: '/admin/leads', label: 'Leads', icon: Users },
   { href: '/admin/projects', label: 'Projects', icon: FolderKanban },
   { href: '/admin/pages', label: 'Pages', icon: FileText },
+  { href: '/admin/faqs', label: 'FAQs', icon: HelpCircle },
+  { href: '/admin/testimonials', label: 'Testimonials', icon: Quote },
   { href: '/admin/analytics', label: 'Analytics', icon: BarChart3 },
   { href: '/admin/settings', label: 'Settings', icon: Settings },
 ]

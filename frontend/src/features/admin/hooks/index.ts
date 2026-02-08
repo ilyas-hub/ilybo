@@ -21,3 +21,10 @@ export {
   useRevertPageVersion,
 } from './use-pages'
 export { useSettings, useUpdateSettings } from './use-settings'
+export { useFAQs, useCreateFAQ, useUpdateFAQ, useDeleteFAQ } from './use-faqs'
+export {
+  useTestimonials,
+  useCreateTestimonial,
+  useUpdateTestimonial,
+  useDeleteTestimonial,
+} from './use-testimonials'

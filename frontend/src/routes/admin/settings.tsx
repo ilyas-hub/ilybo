@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { motion } from 'motion/react'
-import { Building, Mail, Globe, Settings as SettingsIcon } from 'lucide-react'
+import { Building, Mail, Globe, Settings as SettingsIcon, Info } from 'lucide-react'
 import { AdminHeader } from '@/features/admin'
 import {
   CompanyInfoForm,
@@ -8,6 +8,7 @@ import {
   SeoSettingsForm,
 } from '@/features/admin/components/settings-forms'
 import { SocialLinksEditor } from '@/features/admin/components/social-links-editor'
+import { AboutSettingsForm } from '@/features/admin/components/about-settings-form'
 import { useSettings } from '@/features/admin/hooks/use-settings'
 import { Card, CardContent, Tabs, TabsContent, TabsList, TabsTrigger } from '@/lib/ui'
 
@@ -56,7 +57,7 @@ function SettingsPage() {
             animate={{ opacity: 1, y: 0 }}
           >
             <Tabs defaultValue="company" className="space-y-6">
-              <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4">
+              <TabsList className="grid w-full grid-cols-3 lg:grid-cols-5">
                 <TabsTrigger value="company" className="gap-2">
                   <Building className="h-4 w-4 hidden sm:block" />
                   Company
@@ -72,6 +73,10 @@ function SettingsPage() {
                 <TabsTrigger value="seo" className="gap-2">
                   <SettingsIcon className="h-4 w-4 hidden sm:block" />
                   SEO
+                </TabsTrigger>
+                <TabsTrigger value="about" className="gap-2">
+                  <Info className="h-4 w-4 hidden sm:block" />
+                  About
                 </TabsTrigger>
               </TabsList>
 
@@ -108,6 +113,15 @@ function SettingsPage() {
                   animate={{ opacity: 1, y: 0 }}
                 >
                   <SeoSettingsForm settings={settings} />
+                </motion.div>
+              </TabsContent>
+
+              <TabsContent value="about">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                >
+                  <AboutSettingsForm settings={settings} />
                 </motion.div>
               </TabsContent>
             </Tabs>

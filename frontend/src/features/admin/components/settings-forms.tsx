@@ -112,11 +112,13 @@ export function ContactInfoForm({ settings }: SettingsFormProps) {
   const [formData, setFormData] = useState({
     email: settings.contact.email || '',
     phone: settings.contact.phone || '',
+    whatsapp: settings.contact.whatsapp || '',
     street: settings.contact.address?.street || '',
     city: settings.contact.address?.city || '',
     state: settings.contact.address?.state || '',
     country: settings.contact.address?.country || '',
     postalCode: settings.contact.address?.postalCode || '',
+    calendlyUrl: settings.calendlyUrl || '',
   })
   const [saveSuccess, setSaveSuccess] = useState(false)
 
@@ -126,11 +128,13 @@ export function ContactInfoForm({ settings }: SettingsFormProps) {
     setFormData({
       email: settings.contact.email || '',
       phone: settings.contact.phone || '',
+      whatsapp: settings.contact.whatsapp || '',
       street: settings.contact.address?.street || '',
       city: settings.contact.address?.city || '',
       state: settings.contact.address?.state || '',
       country: settings.contact.address?.country || '',
       postalCode: settings.contact.address?.postalCode || '',
+      calendlyUrl: settings.calendlyUrl || '',
     })
   }, [settings])
 
@@ -140,6 +144,7 @@ export function ContactInfoForm({ settings }: SettingsFormProps) {
       contact: {
         email: formData.email,
         phone: formData.phone,
+        whatsapp: formData.whatsapp,
         address: {
           street: formData.street,
           city: formData.city,
@@ -148,6 +153,7 @@ export function ContactInfoForm({ settings }: SettingsFormProps) {
           postalCode: formData.postalCode,
         },
       },
+      calendlyUrl: formData.calendlyUrl,
     })
     setSaveSuccess(true)
     setTimeout(() => setSaveSuccess(false), 2000)
@@ -182,6 +188,33 @@ export function ContactInfoForm({ settings }: SettingsFormProps) {
                 onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
                 placeholder="+1 (555) 123-4567"
               />
+            </div>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="whatsapp">WhatsApp Number</Label>
+              <Input
+                id="whatsapp"
+                value={formData.whatsapp}
+                onChange={(e) => setFormData(prev => ({ ...prev, whatsapp: e.target.value }))}
+                placeholder="+919876543210"
+              />
+              <p className="text-xs text-muted-foreground">
+                Include country code without spaces. Enables floating WhatsApp button.
+              </p>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="calendlyUrl">Calendly URL</Label>
+              <Input
+                id="calendlyUrl"
+                value={formData.calendlyUrl}
+                onChange={(e) => setFormData(prev => ({ ...prev, calendlyUrl: e.target.value }))}
+                placeholder="https://calendly.com/your-name/meeting"
+              />
+              <p className="text-xs text-muted-foreground">
+                Enables "Book a call" button on contact section
+              </p>
             </div>
           </div>
 

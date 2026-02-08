@@ -1,0 +1,42 @@
+export const testimonialsData = [
+  {
+    name: 'Rahul Mehta',
+    company: 'TechStart Solutions',
+    initials: 'RM',
+    review: 'IlyBo transformed our startup idea into a fully functional product. Their team understood our vision perfectly and delivered beyond expectations. The communication was excellent throughout.',
+    order: 0,
+    isActive: true,
+  },
+  {
+    name: 'Priya Sharma',
+    company: 'HealthFirst India',
+    initials: 'PS',
+    review: 'Working with IlyBo was a game-changer for our healthcare platform. They built a scalable solution that handles thousands of users daily. Highly professional team!',
+    order: 1,
+    isActive: true,
+  },
+  {
+    name: 'Amit Patel',
+    company: 'EduLearn Academy',
+    initials: 'AP',
+    review: 'The team at IlyBo delivered our e-learning platform ahead of schedule. Their attention to detail and technical expertise is outstanding. We continue to work with them on new features.',
+    order: 2,
+    isActive: true,
+  },
+  {
+    name: 'Sneha Gupta',
+    company: 'RetailMax',
+    initials: 'SG',
+    review: 'Our e-commerce platform built by IlyBo increased our sales by 200%. The UI/UX design is beautiful and our customers love the seamless shopping experience.',
+    order: 3,
+    isActive: true,
+  },
+  {
+    name: 'Vikram Singh',
+    company: 'FinSecure',
+    initials: 'VS',
+    review: 'Security was our top priority and IlyBo delivered a rock-solid fintech solution. Their expertise in building secure applications gave us complete confidence.',
+    order: 4,
+    isActive: true,
+  },
+]

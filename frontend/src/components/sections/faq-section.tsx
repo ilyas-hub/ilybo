@@ -2,8 +2,9 @@ import { useState, useRef } from 'react'
 import { motion, useInView, AnimatePresence } from 'motion/react'
 import { Plus, Minus } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { usePublicFAQs } from '@/features/cms'
 
-const FAQS = [
+const FALLBACK_FAQS = [
   {
     question: 'How long does it take to build a project?',
     answer: 'Project timelines vary based on complexity. A simple MVP typically takes 4-8 weeks, while larger projects may take 3-6 months. We provide detailed timelines during our initial consultation after understanding your requirements.',
@@ -19,22 +20,6 @@ const FAQS = [
   {
     question: 'Do you provide post-launch support?',
     answer: 'Yes! We offer comprehensive post-launch support including bug fixes, security updates, performance monitoring, and feature enhancements. We have flexible support packages ranging from basic maintenance to dedicated support teams.',
-  },
-  {
-    question: 'Can you work with our existing team?',
-    answer: 'Absolutely! We frequently collaborate with in-house teams as an extension of their workforce. We can integrate seamlessly with your existing workflows, tools, and communication channels.',
-  },
-  {
-    question: 'What is your development process?',
-    answer: 'We follow Agile methodology with 2-week sprints. This includes discovery & planning, design, development, testing, and deployment phases. You get regular updates, demos, and the flexibility to adjust priorities as we progress.',
-  },
-  {
-    question: 'Do you sign NDAs?',
-    answer: 'Yes, we take confidentiality seriously. We are happy to sign NDAs before any detailed discussions about your project. Your ideas and business information are always protected.',
-  },
-  {
-    question: 'How do we communicate during the project?',
-    answer: 'We use Slack or Microsoft Teams for daily communication, conduct weekly video calls for updates, and use project management tools like Jira or Trello for task tracking. You will have direct access to your dedicated project manager.',
   },
 ]
 
@@ -104,13 +89,16 @@ export function FAQSection() {
   const isInView = useInView(sectionRef, { once: true, margin: '-100px' })
   const [openIndex, setOpenIndex] = useState<number | null>(0)
 
+  const { data, isLoading } = usePublicFAQs()
+  const faqs = data?.data || FALLBACK_FAQS
+
   const handleToggle = (index: number) => {
     setOpenIndex(openIndex === index ? null : index)
   }
 
   // Split FAQs into two columns
-  const leftFAQs = FAQS.filter((_, i) => i % 2 === 0)
-  const rightFAQs = FAQS.filter((_, i) => i % 2 === 1)
+  const leftFAQs = faqs.filter((_, i) => i % 2 === 0)
+  const rightFAQs = faqs.filter((_, i) => i % 2 === 1)
 
   return (
     <section
@@ -137,42 +125,55 @@ export function FAQSection() {
           </p>
         </motion.div>
 
-        {/* FAQ Grid - Two columns on desktop */}
-        <div className="mx-auto max-w-5xl">
-          <div className="grid gap-4 md:grid-cols-2">
-            {/* Left Column */}
-            <div className="space-y-4">
-              {leftFAQs.map((faq, i) => {
-                const actualIndex = i * 2
-                return (
-                  <FAQItem
-                    key={actualIndex}
-                    faq={faq}
-                    isOpen={openIndex === actualIndex}
-                    onToggle={() => handleToggle(actualIndex)}
-                    index={actualIndex}
-                  />
-                )
-              })}
-            </div>
-
-            {/* Right Column */}
-            <div className="space-y-4">
-              {rightFAQs.map((faq, i) => {
-                const actualIndex = i * 2 + 1
-                return (
-                  <FAQItem
-                    key={actualIndex}
-                    faq={faq}
-                    isOpen={openIndex === actualIndex}
-                    onToggle={() => handleToggle(actualIndex)}
-                    index={actualIndex}
-                  />
-                )
-              })}
+        {/* Loading skeleton */}
+        {isLoading && (
+          <div className="mx-auto max-w-5xl">
+            <div className="grid gap-4 md:grid-cols-2">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="h-16 animate-pulse rounded-2xl bg-white/50" />
+              ))}
             </div>
           </div>
-        </div>
+        )}
+
+        {/* FAQ Grid - Two columns on desktop */}
+        {!isLoading && (
+          <div className="mx-auto max-w-5xl">
+            <div className="grid gap-4 md:grid-cols-2">
+              {/* Left Column */}
+              <div className="space-y-4">
+                {leftFAQs.map((faq, i) => {
+                  const actualIndex = i * 2
+                  return (
+                    <FAQItem
+                      key={actualIndex}
+                      faq={faq}
+                      isOpen={openIndex === actualIndex}
+                      onToggle={() => handleToggle(actualIndex)}
+                      index={actualIndex}
+                    />
+                  )
+                })}
+              </div>
+
+              {/* Right Column */}
+              <div className="space-y-4">
+                {rightFAQs.map((faq, i) => {
+                  const actualIndex = i * 2 + 1
+                  return (
+                    <FAQItem
+                      key={actualIndex}
+                      faq={faq}
+                      isOpen={openIndex === actualIndex}
+                      onToggle={() => handleToggle(actualIndex)}
+                      index={actualIndex}
+                    />
+                  )
+                })}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* CTA */}
         <motion.div

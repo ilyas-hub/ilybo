@@ -13,10 +13,10 @@ export function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50)
+      setIsScrolled(window.scrollY > 150)
     }
 
-    window.addEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
@@ -35,16 +35,21 @@ export function Navbar() {
     <>
       <motion.header
         className={cn(
-          'fixed top-0 z-50 w-full transition-all duration-500',
-          isScrolled
-            ? 'bg-black shadow-lg'
-            : 'bg-primary'
+          'fixed top-0 z-50 w-full transition-all duration-700 ease-in-out',
+          isScrolled ? 'px-6 pt-4' : 'px-0 pt-0'
         )}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <nav className="container mx-auto flex h-20 items-center justify-between px-4">
+        <nav
+          className={cn(
+            'mx-auto flex items-center justify-between transition-all duration-700 ease-in-out',
+            isScrolled
+              ? 'h-14 max-w-6xl rounded-full bg-black/85 px-8 shadow-2xl backdrop-blur-md'
+              : 'h-20 bg-primary px-4'
+          )}
+        >
           {/* Logo */}
           <a href="/" className="flex items-center">
             <LogoText className="text-3xl" variant={isScrolled ? 'dark' : 'light'} />

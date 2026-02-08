@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
-import { Mail, MapPin, Phone, Send, ArrowRight } from 'lucide-react'
-import { motion, useInView } from 'motion/react'
+import { Mail, MapPin, Phone, Send, CheckCircle, AlertCircle } from 'lucide-react'
+import { motion, useInView, AnimatePresence } from 'motion/react'
+import { PopupButton } from 'react-calendly'
 import {
   Button,
   Input,
@@ -8,12 +9,14 @@ import {
   Label,
 } from '@/lib/ui'
 import { useContactInfo } from '@/features/cms'
+import { apiClient } from '@/lib/api-client'
 
 export function ContactSection() {
-  const { contact, isLoading } = useContactInfo()
+  const { contact, calendlyUrl, isLoading } = useContactInfo()
   const sectionRef = useRef<HTMLElement>(null)
   const isInView = useInView(sectionRef, { once: true, margin: '-100px' })
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -31,25 +34,14 @@ export function ContactSection() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
+    setSubmitStatus('idle')
 
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1'}/leads`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
-        }
-      )
-
-      if (response.ok) {
-        setFormData({ name: '', email: '', company: '', message: '' })
-        alert('Thank you for your message! We will get back to you soon.')
-      } else {
-        throw new Error('Failed to submit')
-      }
+      await apiClient.post('/leads', formData)
+      setFormData({ name: '', email: '', company: '', message: '' })
+      setSubmitStatus('success')
     } catch {
-      alert('Something went wrong. Please try again.')
+      setSubmitStatus('error')
     } finally {
       setIsSubmitting(false)
     }
@@ -153,31 +145,27 @@ export function ContactSection() {
               </div>
             </motion.div>
 
-            {/* Quick CTA */}
-            <motion.div
-              className="rounded-2xl bg-secondary p-6"
-              initial={{ opacity: 0, x: -20 }}
-              animate={isInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              whileHover={{ scale: 1.02 }}
-            >
-              <h3 className="text-lg font-bold text-white">Prefer a quick call?</h3>
-              <p className="mt-2 text-sm text-white/70">
-                Schedule a 15-minute discovery call with our team.
-              </p>
-              <a
-                href="#"
-                className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-primary hover:underline"
+            {/* Quick CTA - only show if calendlyUrl is configured */}
+            {calendlyUrl && (
+              <motion.div
+                className="rounded-2xl bg-secondary p-6"
+                initial={{ opacity: 0, x: -20 }}
+                animate={isInView ? { opacity: 1, x: 0 } : {}}
+                transition={{ duration: 0.5, delay: 0.4 }}
+                whileHover={{ scale: 1.02 }}
               >
-                Book a call
-                <motion.span
-                  animate={{ x: [0, 5, 0] }}
-                  transition={{ duration: 1, repeat: Infinity }}
-                >
-                  <ArrowRight className="h-4 w-4" />
-                </motion.span>
-              </a>
-            </motion.div>
+                <h3 className="text-lg font-bold text-white">Prefer a quick call?</h3>
+                <p className="mt-2 text-sm text-white/70">
+                  Schedule a 15-minute discovery call with our team.
+                </p>
+                <PopupButton
+                  url={calendlyUrl}
+                  rootElement={document.getElementById('root') || document.body}
+                  text="Book a call"
+                  className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-primary hover:underline"
+                />
+              </motion.div>
+            )}
           </div>
 
           {/* Contact form */}
@@ -205,7 +193,7 @@ export function ContactSection() {
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    className="h-12 rounded-xl border-2 border-black/10 bg-primary/20 focus:border-secondary"
+                    className="h-12 rounded-xl border-2 border-black/10 bg-primary/20 text-black placeholder:text-black/40 focus:border-secondary"
                   />
                 </div>
                 <div className="space-y-2">
@@ -220,7 +208,7 @@ export function ContactSection() {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="h-12 rounded-xl border-2 border-black/10 bg-primary/20 focus:border-secondary"
+                    className="h-12 rounded-xl border-2 border-black/10 bg-primary/20 text-black placeholder:text-black/40 focus:border-secondary"
                   />
                 </div>
               </div>
@@ -234,7 +222,7 @@ export function ContactSection() {
                   placeholder="Your Company"
                   value={formData.company}
                   onChange={handleChange}
-                  className="h-12 rounded-xl border-2 border-black/10 bg-primary/20 focus:border-secondary"
+                  className="h-12 rounded-xl border-2 border-black/10 bg-primary/20 text-black placeholder:text-black/40 focus:border-secondary"
                 />
               </div>
               <div className="space-y-2">
@@ -249,7 +237,7 @@ export function ContactSection() {
                   value={formData.message}
                   onChange={handleChange}
                   required
-                  className="rounded-xl border-2 border-black/10 bg-primary/20 focus:border-secondary"
+                  className="rounded-xl border-2 border-black/10 bg-primary/20 text-black placeholder:text-black/40 focus:border-secondary"
                 />
               </div>
               <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
@@ -275,6 +263,37 @@ export function ContactSection() {
                   )}
                 </Button>
               </motion.div>
+
+              <AnimatePresence>
+                {submitStatus === 'success' && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="flex items-center gap-3 rounded-xl bg-green-50 p-4 text-green-800"
+                  >
+                    <CheckCircle className="h-5 w-5 shrink-0 text-green-600" />
+                    <div>
+                      <p className="font-semibold">Message sent successfully!</p>
+                      <p className="text-sm text-green-600">We'll get back to you within 24 hours.</p>
+                    </div>
+                  </motion.div>
+                )}
+                {submitStatus === 'error' && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="flex items-center gap-3 rounded-xl bg-red-50 p-4 text-red-800"
+                  >
+                    <AlertCircle className="h-5 w-5 shrink-0 text-red-600" />
+                    <div>
+                      <p className="font-semibold">Something went wrong</p>
+                      <p className="text-sm text-red-600">Please try again or email us directly.</p>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </form>
           </motion.div>
         </div>

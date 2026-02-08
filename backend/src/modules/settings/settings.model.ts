@@ -13,11 +13,23 @@ export interface IBusinessHours {
   isClosed: boolean
 }
 
+export interface IAboutStat {
+  icon: string
+  value: string
+  label: string
+}
+
+export interface IAboutContent {
+  stats: IAboutStat[]
+  features: string[]
+}
+
 export interface ISiteSettings extends Document {
   _id: mongoose.Types.ObjectId
   contact: {
     email: string
     phone: string
+    whatsapp?: string
     address: {
       street?: string
       city: string
@@ -37,6 +49,8 @@ export interface ISiteSettings extends Document {
     defaultTitle: string
     defaultDescription: string
   }
+  calendlyUrl?: string
+  about: IAboutContent
   updatedBy?: mongoose.Types.ObjectId
   createdAt: Date
   updatedAt: Date
@@ -47,6 +61,7 @@ const siteSettingsSchema = new Schema<ISiteSettings>(
     contact: {
       email: { type: String, required: true },
       phone: { type: String, required: true },
+      whatsapp: { type: String, default: '' },
       address: {
         street: { type: String },
         city: { type: String, required: true },
@@ -78,6 +93,17 @@ const siteSettingsSchema = new Schema<ISiteSettings>(
     seo: {
       defaultTitle: { type: String },
       defaultDescription: { type: String },
+    },
+    calendlyUrl: { type: String, default: '' },
+    about: {
+      stats: [
+        {
+          icon: { type: String, required: true },
+          value: { type: String, required: true },
+          label: { type: String, required: true },
+        },
+      ],
+      features: [{ type: String }],
     },
     updatedBy: {
       type: Schema.Types.ObjectId,

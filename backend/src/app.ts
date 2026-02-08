@@ -13,6 +13,9 @@ import { leadRoutes } from './modules/leads/index.js'
 import { projectRoutes } from './modules/projects/index.js'
 import { settingsRoutes } from './modules/settings/index.js'
 import { pageRoutes } from './modules/pages/index.js'
+import { portfolioProjectRoutes } from './modules/portfolio-projects/index.js'
+import { faqRoutes } from './modules/faqs/index.js'
+import { testimonialRoutes } from './modules/testimonials/index.js'
 
 // Custom MongoDB sanitization for Express 5.x compatibility
 // Note: express-mongo-sanitize and hpp are not compatible with Express 5.x (req.query is read-only)
@@ -123,6 +126,9 @@ export function createApp(): Express {
   app.use(`${API_PREFIX}/projects`, projectRoutes)
   app.use(`${API_PREFIX}/settings`, settingsRoutes)
   app.use(`${API_PREFIX}/pages`, pageRoutes)
+  app.use(`${API_PREFIX}/portfolio-projects`, portfolioProjectRoutes)
+  app.use(`${API_PREFIX}/faqs`, faqRoutes)
+  app.use(`${API_PREFIX}/testimonials`, testimonialRoutes)
 
   // 404 handler
   app.use((_req: Request, res: Response) => {

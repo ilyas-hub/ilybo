@@ -1,8 +1,15 @@
 import { useRef } from 'react'
-import { CheckCircle, Award, Users, Zap } from 'lucide-react'
+import { CheckCircle, Award, Users, Zap, type LucideIcon } from 'lucide-react'
 import { motion, useInView } from 'motion/react'
+import { useAboutContent } from '@/features/cms'
 
-const FEATURES = [
+const ICON_MAP: Record<string, LucideIcon> = {
+  Award,
+  Users,
+  Zap,
+}
+
+const DEFAULT_FEATURES = [
   'Agile Development Methodology',
   'Dedicated Project Managers',
   'Transparent Communication',
@@ -11,15 +18,20 @@ const FEATURES = [
   'Scalable Solutions',
 ]
 
-const STATS = [
-  { icon: Award, value: '5+', label: 'Years of Excellence' },
-  { icon: Users, value: '30+', label: 'Happy Clients' },
-  { icon: Zap, value: '50+', label: 'Projects Delivered' },
+const DEFAULT_STATS = [
+  { icon: 'Award', value: '5+', label: 'Years of Excellence' },
+  { icon: 'Users', value: '30+', label: 'Happy Clients' },
+  { icon: 'Zap', value: '50+', label: 'Projects Delivered' },
 ]
 
 export function AboutSection() {
   const sectionRef = useRef<HTMLElement>(null)
   const isInView = useInView(sectionRef, { once: true, margin: '-100px' })
+
+  const { about } = useAboutContent()
+
+  const features = about?.features?.length ? about.features : DEFAULT_FEATURES
+  const stats = about?.stats?.length ? about.stats : DEFAULT_STATS
 
   return (
     <section id="about" ref={sectionRef} className="relative overflow-hidden bg-secondary py-20 lg:py-32">
@@ -49,7 +61,7 @@ export function AboutSection() {
 
             {/* Features list */}
             <ul className="mt-8 grid gap-3 sm:grid-cols-2">
-              {FEATURES.map((feature, index) => (
+              {features.map((feature, index) => (
                 <motion.li
                   key={feature}
                   className="flex items-center gap-3"
@@ -88,27 +100,30 @@ export function AboutSection() {
 
               {/* Stats */}
               <div className="mt-8 grid grid-cols-3 gap-4">
-                {STATS.map((stat, index) => (
-                  <motion.div
-                    key={stat.label}
-                    className="rounded-2xl bg-primary/40 p-4 text-center"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.4, delay: 0.4 + index * 0.1 }}
-                    whileHover={{ scale: 1.05, y: -5 }}
-                  >
+                {stats.map((stat, index) => {
+                  const IconComponent = ICON_MAP[stat.icon] || Award
+                  return (
                     <motion.div
-                      animate={{ rotate: [0, 5, -5, 0], scale: [1, 1.1, 1] }}
-                      transition={{ duration: 3, repeat: Infinity, delay: index * 0.3 }}
+                      key={stat.label}
+                      className="rounded-2xl bg-primary/40 p-4 text-center"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={isInView ? { opacity: 1, y: 0 } : {}}
+                      transition={{ duration: 0.4, delay: 0.4 + index * 0.1 }}
+                      whileHover={{ scale: 1.05, y: -5 }}
                     >
-                      <stat.icon className="mx-auto h-6 w-6 text-secondary" />
+                      <motion.div
+                        animate={{ rotate: [0, 5, -5, 0], scale: [1, 1.1, 1] }}
+                        transition={{ duration: 3, repeat: Infinity, delay: index * 0.3 }}
+                      >
+                        <IconComponent className="mx-auto h-6 w-6 text-secondary" />
+                      </motion.div>
+                      <div className="mt-2 text-2xl font-black text-black lg:text-3xl">
+                        {stat.value}
+                      </div>
+                      <div className="text-xs text-black/60">{stat.label}</div>
                     </motion.div>
-                    <div className="mt-2 text-2xl font-black text-black lg:text-3xl">
-                      {stat.value}
-                    </div>
-                    <div className="text-xs text-black/60">{stat.label}</div>
-                  </motion.div>
-                ))}
+                  )
+                })}
               </div>
             </div>
 

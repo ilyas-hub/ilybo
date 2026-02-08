@@ -5,6 +5,7 @@ export const updateSettingsSchema = z.object({
     .object({
       email: z.string().email().optional(),
       phone: z.string().optional(),
+      whatsapp: z.string().optional(),
       address: z
         .object({
           street: z.string().optional(),
@@ -46,6 +47,21 @@ export const updateSettingsSchema = z.object({
     .object({
       defaultTitle: z.string().optional(),
       defaultDescription: z.string().optional(),
+    })
+    .optional(),
+  calendlyUrl: z.string().url().optional().or(z.literal('')),
+  about: z
+    .object({
+      stats: z
+        .array(
+          z.object({
+            icon: z.string(),
+            value: z.string(),
+            label: z.string(),
+          })
+        )
+        .optional(),
+      features: z.array(z.string()).optional(),
     })
     .optional(),
 })
