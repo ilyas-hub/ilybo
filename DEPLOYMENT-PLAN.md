@@ -45,7 +45,7 @@ git push origin Dev
 | **Branch** | `Dev` (or `main`) |
 | **Root Directory** | `backend` |
 | **Runtime** | `Node` |
-| **Build Command** | `npm install && npm run build` |
+| **Build Command** | `npm install --include=dev && npm run build` |
 | **Start Command** | `npm start` |
 | **Instance Type** | Free (or paid for no cold starts) |
 
@@ -96,7 +96,7 @@ In the Render service settings → **Environment** → add these:
 ## Step 5: Deploy
 
 Click **Deploy Web Service**. Render will:
-1. Run `npm install` in `backend/`
+1. Run `npm install --include=dev` in `backend/`
 2. Run `npm run build` which:
    - `cd ../frontend && npm install && npm run build` → builds frontend into `frontend/dist/`
    - `cd ../backend && tsc` → compiles backend into `backend/dist/`
