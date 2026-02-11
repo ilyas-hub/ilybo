@@ -25,7 +25,7 @@ All endpoints tested locally and passed:
 Make sure all changes are committed and pushed to your remote repository.
 
 ```bash
-git add backend/package.json backend/src/app.ts frontend/src/lib/api-client.ts DEPLOYMENT-PLAN.md
+git add backend/package.json backend/src/app.ts frontend/src/lib/api-client.ts frontend/package.json DEPLOYMENT-PLAN.md
 git commit -m "feat: serve frontend from backend for single-service deployment"
 git push origin Dev
 ```
@@ -64,10 +64,11 @@ In the Render service settings → **Environment** → add these:
 | `JWT_ACCESS_EXPIRY` | `15m` |
 | `JWT_REFRESH_EXPIRY` | `7d` |
 | `CORS_ORIGINS` | `https://ilybo.onrender.com` *(your Render URL)* |
-| `SEED_ADMIN_EMAIL` | `admin@ilybo.com` |
-| `SEED_ADMIN_PASSWORD` | *(your secure admin password, min 8 chars)* |
-| `SEED_ADMIN_NAME` | `Admin` |
+| `ADMIN_EMAIL` | `admin@ilybo.com` |
+| `ADMIN_PASSWORD` | *(your secure admin password, min 8 chars)* |
 | `FORCE_SEED` | `true` *(set to `false` after first successful deploy)* |
+
+> **How admin seeding works:** `ADMIN_EMAIL` + `ADMIN_PASSWORD` creates the primary admin account. `ADMIN_EMAIL` is also used as the recipient for lead notification emails. Optionally, you can set `SEED_ADMIN_EMAIL`, `SEED_ADMIN_PASSWORD`, and `SEED_ADMIN_NAME` to create a second admin account.
 
 **Optional (for email notifications):**
 
@@ -77,7 +78,8 @@ In the Render service settings → **Environment** → add these:
 | `SMTP_PORT` | `587` |
 | `SMTP_USER` | *(your Gmail address)* |
 | `SMTP_PASS` | *(your Gmail app password)* |
-| `ADMIN_EMAIL` | *(email address for lead notifications, defaults to `SEED_ADMIN_EMAIL`)* |
+| `SMTP_FROM_NAME` | `IlyBo` *(sender display name, defaults to `IlyBo`)* |
+| `SMTP_FROM_EMAIL` | `noreply@ilybo.com` *(sender email, defaults to `noreply@ilybo.com`)* |
 
 > **Note:** `VITE_API_URL` is **NOT needed** — the frontend uses relative `/api/v1` since it's served from the same origin.
 
