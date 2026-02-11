@@ -28,14 +28,10 @@ class ApiClient {
       ...fetchOptions.headers,
     }
 
-    const token = localStorage.getItem('accessToken')
-    if (token) {
-      ;(headers as Record<string, string>)['Authorization'] = `Bearer ${token}`
-    }
-
     const response = await fetch(url, {
       ...fetchOptions,
       headers,
+      credentials: 'include',
     })
 
     if (!response.ok) {

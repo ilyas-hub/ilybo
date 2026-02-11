@@ -7,21 +7,10 @@ export interface AuthUser {
   role: 'user' | 'admin'
 }
 
-export interface LoginResponse {
+export interface AuthResponse {
   success: boolean
   data: {
     user: AuthUser
-    accessToken: string
-    refreshToken: string
-  }
-}
-
-export interface RegisterResponse {
-  success: boolean
-  data: {
-    user: AuthUser
-    accessToken: string
-    refreshToken: string
   }
 }
 
@@ -34,15 +23,14 @@ export interface MeResponse {
 
 export const authApi = {
   login: (email: string, password: string) =>
-    apiClient.post<LoginResponse>('/auth/login', { email, password }),
+    apiClient.post<AuthResponse>('/auth/login', { email, password }),
 
   register: (name: string, email: string, password: string) =>
-    apiClient.post<RegisterResponse>('/auth/register', { name, email, password }),
+    apiClient.post<AuthResponse>('/auth/register', { name, email, password }),
 
   logout: () => apiClient.post('/auth/logout'),
 
   me: () => apiClient.get<MeResponse>('/auth/me'),
 
-  refresh: (refreshToken: string) =>
-    apiClient.post<LoginResponse>('/auth/refresh', { refreshToken }),
+  refresh: () => apiClient.post('/auth/refresh'),
 }

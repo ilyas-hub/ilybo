@@ -19,8 +19,8 @@ const DEFAULT_FEATURES = [
 ]
 
 const DEFAULT_STATS = [
-  { icon: 'Award', value: '5+', label: 'Years of Excellence' },
-  { icon: 'Users', value: '30+', label: 'Happy Clients' },
+  { icon: 'Award', value: '7+', label: 'Years of Excellence' },
+  { icon: 'Users', value: '50+', label: 'Happy Clients' },
   { icon: 'Zap', value: '50+', label: 'Projects Delivered' },
 ]
 

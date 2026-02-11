@@ -13,7 +13,8 @@ import {
 import { motion, useInView, AnimatePresence } from 'motion/react'
 import { usePortfolioProjects } from '@/features/portfolio'
 import type { PortfolioProject } from '@/features/portfolio'
-import { openProjectWizard } from './project-wizard-section'
+import { Link } from '@tanstack/react-router'
+import { navigateToStartProject, START_PROJECT_PATH } from './open-project-wizard'
 import {
   Dialog,
   DialogContent,
@@ -79,6 +80,7 @@ function ProjectCard({ project, index, isInView, onSelect }: ProjectCardProps) {
           <img
             src={project.thumbnail}
             alt={project.title}
+            loading="lazy"
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
         ) : (
@@ -184,6 +186,7 @@ function ProjectDetailModal({ project, open, onClose }: ProjectDetailModalProps)
             <img
               src={project.thumbnail}
               alt={project.title}
+              loading="lazy"
               className="h-full w-full object-cover"
             />
           ) : (
@@ -315,7 +318,7 @@ function ProjectDetailModal({ project, open, onClose }: ProjectDetailModalProps)
             <button
               onClick={() => {
                 onClose()
-                setTimeout(() => openProjectWizard(), 300)
+                setTimeout(() => navigateToStartProject(), 300)
               }}
               className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-bold text-white transition-colors hover:opacity-90"
               style={{ backgroundColor: color }}
@@ -445,20 +448,21 @@ export function ProjectsSection() {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5, delay: 0.5 }}
         >
-          <motion.button
-            onClick={openProjectWizard}
-            className="inline-flex items-center gap-2 rounded-full bg-secondary px-8 py-4 font-bold text-white transition-colors hover:bg-secondary/90"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            Start Your Project
+          <Link to={START_PROJECT_PATH}>
             <motion.span
-              animate={{ x: [0, 5, 0] }}
-              transition={{ duration: 1, repeat: Infinity, repeatDelay: 1 }}
+              className="inline-flex items-center gap-2 rounded-full bg-secondary px-8 py-4 font-bold text-white transition-colors hover:bg-secondary/90"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
             >
-              <ArrowRight className="h-5 w-5" />
+              Start Your Project
+              <motion.span
+                animate={{ x: [0, 5, 0] }}
+                transition={{ duration: 1, repeat: Infinity, repeatDelay: 1 }}
+              >
+                <ArrowRight className="h-5 w-5" />
+              </motion.span>
             </motion.span>
-          </motion.button>
+          </Link>
         </motion.div>
       </div>
 

@@ -2,7 +2,14 @@ import nodemailer from 'nodemailer'
 import type { Transporter } from 'nodemailer'
 import { env } from '../../config/index.js'
 import { logger } from '../../utils/index.js'
-import { passwordResetTemplate, passwordResetTextTemplate } from './email.templates.js'
+import {
+  passwordResetTemplate,
+  passwordResetTextTemplate,
+  leadConfirmationTemplate,
+  leadConfirmationTextTemplate,
+  adminLeadNotificationTemplate,
+  adminLeadNotificationTextTemplate,
+} from './email.templates.js'
 
 interface EmailOptions {
   to: string
@@ -64,6 +71,27 @@ class EmailService {
       subject: 'Password Reset - IlyBo',
       html: passwordResetTemplate(otp, expiryMinutes),
       text: passwordResetTextTemplate(otp, expiryMinutes),
+    })
+  }
+
+  async sendLeadConfirmation(email: string, name: string): Promise<boolean> {
+    return this.sendEmail({
+      to: email,
+      subject: 'Thank you for contacting us - IlyBo',
+      html: leadConfirmationTemplate({ name }),
+      text: leadConfirmationTextTemplate({ name }),
+    })
+  }
+
+  async sendAdminLeadNotification(
+    adminEmail: string,
+    data: { name: string; email: string; phone?: string; company?: string; message: string }
+  ): Promise<boolean> {
+    return this.sendEmail({
+      to: adminEmail,
+      subject: `New Lead: ${data.name} - IlyBo`,
+      html: adminLeadNotificationTemplate(data),
+      text: adminLeadNotificationTextTemplate(data),
     })
   }
 }

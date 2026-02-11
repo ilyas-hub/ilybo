@@ -10,7 +10,6 @@ import {
 import {
   registerSchema,
   loginSchema,
-  refreshSchema,
   requestPasswordResetSchema,
   verifyOTPSchema,
   resetPasswordSchema,
@@ -32,7 +31,7 @@ router.post(
   authController.login
 )
 
-router.post('/refresh', validate(refreshSchema), authController.refresh)
+router.post('/refresh', authController.refresh)
 
 router.post('/logout', authMiddleware, authController.logout)
 

@@ -1,6 +1,7 @@
 export const NAV_LINKS = [
   { href: '#how-it-works', label: 'How It Works' },
   { href: '#services', label: 'Services' },
+  { href: '#projects', label: 'Projects' },
   { href: '#about', label: 'About' },
   { href: '#contact', label: 'Contact' },
 ] as const
@@ -13,10 +14,10 @@ export const FOOTER_LINKS = {
     { href: '#contact', label: 'Contact' },
   ],
   services: [
-    { href: '#', label: 'Web Development' },
-    { href: '#', label: 'Mobile Apps' },
-    { href: '#', label: 'UI/UX Design' },
-    { href: '#', label: 'Cloud Solutions' },
+    { href: '#services', label: 'Web Development' },
+    { href: '#services', label: 'Mobile Apps' },
+    { href: '#services', label: 'UI/UX Design' },
+    { href: '#services', label: 'Cloud Solutions' },
   ],
   social: [
     { href: 'https://www.linkedin.com/in/ilybo-dev-8309763ab/', label: 'LinkedIn' },

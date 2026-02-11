@@ -106,7 +106,7 @@ export function LeadsTable() {
 
   return (
     <div className="space-y-4">
-      <LeadFilters status={status} onStatusChange={setStatus} />
+      <LeadFilters status={status} onStatusChange={(s) => { setStatus(s); setPage(1); }} />
 
       {/* Mobile Card View */}
       <div className="space-y-3">

@@ -12,6 +12,9 @@ const envSchema = z.object({
   CORS_ORIGINS: z.string().default('http://localhost:5173'),
   ADMIN_EMAIL: z.string().email().optional(),
   ADMIN_PASSWORD: z.string().min(8).optional(),
+  SEED_ADMIN_EMAIL: z.string().email().optional(),
+  SEED_ADMIN_PASSWORD: z.string().min(8).optional(),
+  SEED_ADMIN_NAME: z.string().optional(),
   FORCE_SEED: z.coerce.boolean().default(false),
   // SMTP Configuration
   SMTP_HOST: z.string().default('smtp.gmail.com'),

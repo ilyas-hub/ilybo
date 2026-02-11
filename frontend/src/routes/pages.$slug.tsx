@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import ReactMarkdown from 'react-markdown'
+import DOMPurify from 'dompurify'
 import { usePage } from '@/features/cms'
 
 export const Route = createFileRoute('/pages/$slug')({
@@ -36,7 +37,7 @@ function DynamicPage() {
         {page.contentFormat === 'markdown' ? (
           <ReactMarkdown>{page.content}</ReactMarkdown>
         ) : (
-          <div dangerouslySetInnerHTML={{ __html: page.content }} />
+          <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(page.content) }} />
         )}
       </article>
     </div>

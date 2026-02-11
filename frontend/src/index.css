@@ -9,7 +9,7 @@
 
 /* Light mode - Yellow-first minimal design */
 :root {
-  --background: 48 100% 62%;
+  --background: 0 0% 100%;
   --foreground: 0 0% 0%;
   /* Yellow as PRIMARY - main brand color */
   --primary: 48 100% 62%;
@@ -160,6 +160,33 @@ body {
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
+}
+
+/* Focus indicators for accessibility */
+:focus-visible {
+  outline: 2px solid hsl(var(--secondary));
+  outline-offset: 2px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[role="button"]:focus-visible {
+  outline: 2px solid hsl(var(--secondary));
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Ensure all interactive elements have pointer cursor */

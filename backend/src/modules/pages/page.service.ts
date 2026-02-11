@@ -64,6 +64,15 @@ export async function updatePage(
     throw new NotFoundError('Page not found')
   }
 
+  // Check slug uniqueness on update
+  if (data.slug && data.slug !== page.slug) {
+    const existingPage = await Page.findOne({ slug: data.slug })
+    if (existingPage) {
+      throw new ConflictError('A page with this slug already exists')
+    }
+    page.slug = data.slug
+  }
+
   // Track if content changed for versioning
   const contentChanged = data.title !== page.title || data.content !== page.content
 

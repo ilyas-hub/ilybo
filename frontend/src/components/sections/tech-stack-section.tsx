@@ -92,7 +92,7 @@ function TechMarquee({
               key={`${tech.name}-${i}`}
               className="flex items-center gap-2 rounded-full bg-white/80 px-4 py-2 shadow-sm"
             >
-              <Icon className="h-5 w-5" style={{ color: tech.color }} />
+              <Icon className="h-5 w-5" style={{ color: tech.color }} aria-hidden="true" />
               <span className="whitespace-nowrap text-sm font-bold text-black/70">
                 {tech.name}
               </span>
@@ -165,6 +165,7 @@ export function TechStackSection() {
                   <Icon
                     className="h-10 w-10 transition-transform md:h-12 md:w-12"
                     style={{ color: tech.color }}
+                    aria-hidden="true"
                   />
                 </motion.div>
                 <span className="mt-2 text-center text-xs font-bold text-black/70">

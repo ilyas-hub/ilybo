@@ -4,8 +4,6 @@ import { authApi, type AuthUser } from '../api/auth-api'
 
 interface AuthState {
   user: AuthUser | null
-  accessToken: string | null
-  refreshToken: string | null
   isLoading: boolean
   error: string | null
   isAuthenticated: boolean
@@ -21,8 +19,6 @@ export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
       user: null,
-      accessToken: null,
-      refreshToken: null,
       isLoading: false,
       error: null,
       isAuthenticated: false,
@@ -31,15 +27,10 @@ export const useAuthStore = create<AuthState>()(
         set({ isLoading: true, error: null })
         try {
           const response = await authApi.login(email, password)
-          const { user, accessToken, refreshToken } = response.data
-
-          localStorage.setItem('accessToken', accessToken)
-          localStorage.setItem('refreshToken', refreshToken)
+          const { user } = response.data
 
           set({
             user,
-            accessToken,
-            refreshToken,
             isAuthenticated: true,
             isLoading: false,
           })
@@ -55,15 +46,10 @@ export const useAuthStore = create<AuthState>()(
         set({ isLoading: true, error: null })
         try {
           const response = await authApi.register(name, email, password)
-          const { user, accessToken, refreshToken } = response.data
-
-          localStorage.setItem('accessToken', accessToken)
-          localStorage.setItem('refreshToken', refreshToken)
+          const { user } = response.data
 
           set({
             user,
-            accessToken,
-            refreshToken,
             isAuthenticated: true,
             isLoading: false,
           })
@@ -82,24 +68,13 @@ export const useAuthStore = create<AuthState>()(
           // Ignore logout errors
         }
 
-        localStorage.removeItem('accessToken')
-        localStorage.removeItem('refreshToken')
-
         set({
           user: null,
-          accessToken: null,
-          refreshToken: null,
           isAuthenticated: false,
         })
       },
 
       checkAuth: async () => {
-        const token = localStorage.getItem('accessToken')
-        if (!token) {
-          set({ isAuthenticated: false, user: null })
-          return
-        }
-
         set({ isLoading: true })
         try {
           const response = await authApi.me()
@@ -109,12 +84,8 @@ export const useAuthStore = create<AuthState>()(
             isLoading: false,
           })
         } catch {
-          localStorage.removeItem('accessToken')
-          localStorage.removeItem('refreshToken')
           set({
             user: null,
-            accessToken: null,
-            refreshToken: null,
             isAuthenticated: false,
             isLoading: false,
           })
@@ -127,8 +98,6 @@ export const useAuthStore = create<AuthState>()(
       name: 'auth-storage',
       partialize: (state) => ({
         user: state.user,
-        accessToken: state.accessToken,
-        refreshToken: state.refreshToken,
         isAuthenticated: state.isAuthenticated,
       }),
     }

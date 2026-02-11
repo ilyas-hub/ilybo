@@ -3,9 +3,9 @@ import { motion, useInView } from 'motion/react'
 import { Award, Users, Zap, Clock } from 'lucide-react'
 
 const STATS = [
-  { icon: Clock, value: 5, suffix: '+', label: 'Years Experience' },
+  { icon: Clock, value: 7, suffix: '+', label: 'Years of Experience' },
   { icon: Zap, value: 50, suffix: '+', label: 'Projects Delivered' },
-  { icon: Users, value: 30, suffix: '+', label: 'Happy Clients' },
+  { icon: Users, value: 50, suffix: '+', label: 'Happy Clients' },
   { icon: Award, value: 99, suffix: '%', label: 'Client Satisfaction' },
 ]
 
@@ -14,23 +14,15 @@ function AnimatedCounter({ value, suffix, isInView }: { value: number; suffix: s
 
   useEffect(() => {
     if (!isInView) return
-
-    let start = 0
-    const end = value
+    const start = performance.now()
     const duration = 2000
-    const increment = end / (duration / 16)
-
-    const timer = setInterval(() => {
-      start += increment
-      if (start >= end) {
-        setCount(end)
-        clearInterval(timer)
-      } else {
-        setCount(Math.floor(start))
-      }
-    }, 16)
-
-    return () => clearInterval(timer)
+    const animate = (now: number) => {
+      const elapsed = now - start
+      const progress = Math.min(elapsed / duration, 1)
+      setCount(Math.floor(progress * value))
+      if (progress < 1) requestAnimationFrame(animate)
+    }
+    requestAnimationFrame(animate)
   }, [isInView, value])
 
   return (

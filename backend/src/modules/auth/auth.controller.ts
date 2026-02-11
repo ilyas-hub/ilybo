@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from 'express'
 import * as authService from './auth.service.js'
-import { sendSuccess, sendCreated, sendNoContent } from '../../utils/index.js'
+import { sendSuccess, sendCreated, sendNoContent, setAuthCookies, clearAuthCookies } from '../../utils/index.js'
 
 export async function register(
   req: Request,
@@ -8,7 +8,8 @@ export async function register(
   next: NextFunction
 ): Promise<void> {
   try {
-    const result = await authService.register(req.body)
+    const { accessToken, refreshToken, ...result } = await authService.register(req.body)
+    setAuthCookies(res, accessToken, refreshToken)
     sendCreated(res, result, 'Registration successful')
   } catch (error) {
     next(error)
@@ -21,7 +22,8 @@ export async function login(
   next: NextFunction
 ): Promise<void> {
   try {
-    const result = await authService.login(req.body)
+    const { accessToken, refreshToken, ...result } = await authService.login(req.body)
+    setAuthCookies(res, accessToken, refreshToken)
     sendSuccess(res, result, 200, 'Login successful')
   } catch (error) {
     next(error)
@@ -34,8 +36,13 @@ export async function refresh(
   next: NextFunction
 ): Promise<void> {
   try {
-    const tokens = await authService.refresh(req.body.refreshToken)
-    sendSuccess(res, tokens)
+    const refreshToken = req.cookies?.refreshToken
+    if (!refreshToken) {
+      throw new Error('No refresh token')
+    }
+    const tokens = await authService.refresh(refreshToken)
+    setAuthCookies(res, tokens.accessToken, tokens.refreshToken)
+    sendSuccess(res, { message: 'Tokens refreshed' })
   } catch (error) {
     next(error)
   }
@@ -48,6 +55,7 @@ export async function logout(
 ): Promise<void> {
   try {
     await authService.logout(req.user!.userId)
+    clearAuthCookies(res)
     sendNoContent(res)
   } catch (error) {
     next(error)

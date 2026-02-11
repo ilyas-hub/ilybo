@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
 import { Menu, X, ArrowRight } from 'lucide-react'
 import { motion, AnimatePresence } from 'motion/react'
+import { FocusTrap } from 'focus-trap-react'
+import { Link } from '@tanstack/react-router'
 import { Button } from '@/lib/ui'
 import { NAV_LINKS } from '@/shared/constants/navigation'
 import { cn } from '@/lib/utils'
 import { LogoText } from '@/components/brand'
-import { openProjectWizard } from '@/components/sections/project-wizard-section'
+import { START_PROJECT_PATH } from '@/components/sections/open-project-wizard'
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -64,7 +66,7 @@ export function Navbar() {
                 className={cn(
                   'group relative text-sm font-bold uppercase tracking-wide transition-colors',
                   isScrolled
-                    ? 'text-primary hover:text-secondary'
+                    ? 'text-white hover:text-primary'
                     : 'text-black hover:text-secondary'
                 )}
               >
@@ -77,7 +79,7 @@ export function Navbar() {
           {/* Right side - CTA */}
           <div className="hidden items-center gap-4 lg:flex">
             <Button
-              onClick={openProjectWizard}
+              asChild
               className={cn(
                 'rounded-full px-6 font-bold shadow-md transition-all hover:shadow-lg',
                 isScrolled
@@ -85,8 +87,10 @@ export function Navbar() {
                   : 'bg-black text-white hover:bg-black/90'
               )}
             >
-              Get Started
-              <ArrowRight className="ml-1 h-4 w-4" />
+              <Link to={START_PROJECT_PATH}>
+                Get Started
+                <ArrowRight className="ml-1 h-4 w-4" />
+              </Link>
             </Button>
           </div>
 
@@ -122,64 +126,66 @@ export function Navbar() {
               onClick={() => setIsOpen(false)}
             />
 
-            <motion.div
-              className="fixed right-0 top-0 z-50 h-screen w-[300px] bg-white shadow-2xl"
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            >
-              {/* Mobile header */}
-              <div className="flex items-center justify-between border-b border-black/10 px-6 py-5">
-                <div className="flex items-center">
-                  <LogoText className="text-2xl" />
-                </div>
-                <button
-                  className="rounded-full p-2 text-black hover:bg-black/10"
-                  onClick={() => setIsOpen(false)}
-                >
-                  <X className="h-6 w-6" />
-                </button>
-              </div>
-
-              <div className="flex h-full flex-col px-6 pt-6">
-                <div className="space-y-1">
-                  {NAV_LINKS.map((link, index) => (
-                    <motion.a
-                      key={link.href}
-                      href={link.href}
-                      onClick={() => setIsOpen(false)}
-                      className="flex items-center justify-between rounded-xl px-4 py-3 text-lg font-bold uppercase text-black transition-colors hover:bg-primary"
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.05 }}
-                    >
-                      {link.label}
-                      <ArrowRight className="h-4 w-4 opacity-50" />
-                    </motion.a>
-                  ))}
-                </div>
-
-                <hr className="my-6 border-black/10" />
-
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
-                >
-                  <Button
-                    className="w-full rounded-full bg-secondary py-5 text-base font-bold text-white hover:bg-secondary/90"
-                    onClick={() => {
-                      setIsOpen(false)
-                      openProjectWizard()
-                    }}
+            <FocusTrap focusTrapOptions={{ allowOutsideClick: true, escapeDeactivates: true, onDeactivate: () => setIsOpen(false) }}>
+              <motion.div
+                className="fixed right-0 top-0 z-50 h-screen w-[300px] bg-white shadow-2xl"
+                initial={{ x: '100%' }}
+                animate={{ x: 0 }}
+                exit={{ x: '100%' }}
+                transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              >
+                {/* Mobile header */}
+                <div className="flex items-center justify-between border-b border-black/10 px-6 py-5">
+                  <div className="flex items-center">
+                    <LogoText className="text-2xl" />
+                  </div>
+                  <button
+                    className="rounded-full p-2 text-black hover:bg-black/10"
+                    onClick={() => setIsOpen(false)}
+                    aria-label="Close menu"
                   >
-                    Get Started
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </motion.div>
-              </div>
-            </motion.div>
+                    <X className="h-6 w-6" aria-hidden="true" />
+                  </button>
+                </div>
+
+                <div className="flex h-full flex-col px-6 pt-6">
+                  <div className="space-y-1">
+                    {NAV_LINKS.map((link, index) => (
+                      <motion.a
+                        key={link.href}
+                        href={link.href}
+                        onClick={() => setIsOpen(false)}
+                        className="flex items-center justify-between rounded-xl px-4 py-3 text-lg font-bold uppercase text-black transition-colors hover:bg-primary"
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.05 }}
+                      >
+                        {link.label}
+                        <ArrowRight className="h-4 w-4 opacity-50" aria-hidden="true" />
+                      </motion.a>
+                    ))}
+                  </div>
+
+                  <hr className="my-6 border-black/10" />
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                  >
+                    <Button
+                      asChild
+                      className="w-full rounded-full bg-secondary py-5 text-base font-bold text-white hover:bg-secondary/90"
+                    >
+                      <Link to={START_PROJECT_PATH} onClick={() => setIsOpen(false)}>
+                        Get Started
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Link>
+                    </Button>
+                  </motion.div>
+                </div>
+              </motion.div>
+            </FocusTrap>
           </>
         )}
       </AnimatePresence>

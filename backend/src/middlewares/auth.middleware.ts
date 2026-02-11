@@ -7,13 +7,20 @@ export function authMiddleware(
   next: NextFunction
 ): void {
   try {
-    const authHeader = req.headers.authorization
+    // Try httpOnly cookie first, then fall back to Authorization header
+    let token = req.cookies?.accessToken
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    if (!token) {
+      const authHeader = req.headers.authorization
+      if (authHeader?.startsWith('Bearer ')) {
+        token = authHeader.split(' ')[1]
+      }
+    }
+
+    if (!token) {
       throw new UnauthorizedError('No token provided')
     }
 
-    const token = authHeader.split(' ')[1]
     const decoded = verifyToken(token)
 
     req.user = {

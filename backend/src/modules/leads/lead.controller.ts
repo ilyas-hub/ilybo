@@ -84,3 +84,18 @@ export async function getLeadStats(
     next(error)
   }
 }
+
+export async function exportLeads(
+  _req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const csv = await leadService.exportLeadsCsv()
+    res.setHeader('Content-Type', 'text/csv')
+    res.setHeader('Content-Disposition', 'attachment; filename=leads-export.csv')
+    res.send(csv)
+  } catch (error) {
+    next(error)
+  }
+}

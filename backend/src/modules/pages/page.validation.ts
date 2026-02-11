@@ -16,6 +16,10 @@ export const createPageSchema = z.object({
 })
 
 export const updatePageSchema = z.object({
+  slug: z
+    .string()
+    .regex(/^[a-z0-9-]+$/, 'Slug must contain only lowercase letters, numbers, and hyphens')
+    .optional(),
   title: z.string().min(1).optional(),
   content: z.string().min(1).optional(),
   contentFormat: z.enum(['markdown', 'html']).optional(),

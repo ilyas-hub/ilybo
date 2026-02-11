@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useCallback } from 'react'
 import {
   Globe,
   Smartphone,
@@ -15,7 +15,8 @@ import {
   ChevronRight,
 } from 'lucide-react'
 import { motion, useInView, AnimatePresence, LayoutGroup } from 'motion/react'
-import { openProjectWizard } from './project-wizard-section'
+import { Link } from '@tanstack/react-router'
+import { navigateToStartProject, START_PROJECT_PATH } from './open-project-wizard'
 
 const SERVICES = [
   {
@@ -121,6 +122,17 @@ interface ServiceCardProps {
 
 function ServiceCard({ service, index, isExpanded, onToggle, hasExpandedCard, isInView }: ServiceCardProps) {
   const Icon = service.icon
+  const wizardTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const handleStartProject = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation()
+    onToggle()
+    if (wizardTimeoutRef.current) clearTimeout(wizardTimeoutRef.current)
+    wizardTimeoutRef.current = setTimeout(() => {
+      navigateToStartProject()
+      wizardTimeoutRef.current = null
+    }, 300)
+  }, [onToggle])
 
   return (
     <motion.div
@@ -179,7 +191,7 @@ function ServiceCard({ service, index, isExpanded, onToggle, hasExpandedCard, is
               }}
               whileHover={{ rotate: 10, scale: 1.2 }}
             >
-              <Icon className="h-6 w-6" style={{ color: service.color }} />
+              <Icon className="h-6 w-6" style={{ color: service.color }} aria-hidden="true" />
             </motion.div>
             <h3 className="text-lg font-bold text-black group-hover:text-secondary transition-colors">
               {service.title}
@@ -229,11 +241,12 @@ function ServiceCard({ service, index, isExpanded, onToggle, hasExpandedCard, is
                   e.stopPropagation()
                   onToggle()
                 }}
-                className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-black/10 text-black/70 transition-colors hover:bg-black/20 z-10"
+                className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-black/10 text-black/70 transition-colors hover:bg-black/20 z-10"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
+                aria-label="Close service details"
               >
-                <X className="h-5 w-5" />
+                <X className="h-5 w-5" aria-hidden="true" />
               </motion.button>
 
               <div className="relative flex items-start gap-5">
@@ -243,7 +256,7 @@ function ServiceCard({ service, index, isExpanded, onToggle, hasExpandedCard, is
                   animate={{ rotate: [0, 5, -5, 0] }}
                   transition={{ duration: 4, repeat: Infinity }}
                 >
-                  <Icon className="h-8 w-8" />
+                  <Icon className="h-8 w-8" aria-hidden="true" />
                 </motion.div>
                 <div className="min-w-0">
                   <h3 className="text-2xl font-black text-black">{service.title}</h3>
@@ -304,11 +317,7 @@ function ServiceCard({ service, index, isExpanded, onToggle, hasExpandedCard, is
 
               {/* CTA Button */}
               <motion.button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  onToggle()
-                  setTimeout(() => openProjectWizard(), 300)
-                }}
+                onClick={handleStartProject}
                 className="mt-8 w-full flex items-center justify-center gap-2 rounded-xl py-4 text-base font-bold text-white transition-all"
                 style={{ backgroundColor: service.color }}
                 initial={{ opacity: 0, y: 10 }}
@@ -390,20 +399,21 @@ export function ServicesSection() {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5, delay: 0.5 }}
         >
-          <motion.button
-            onClick={openProjectWizard}
-            className="inline-flex items-center gap-2 rounded-full bg-secondary px-8 py-4 font-bold text-white transition-colors hover:bg-secondary/90"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            Let's Talk About Your Project
+          <Link to={START_PROJECT_PATH}>
             <motion.span
-              animate={{ x: [0, 5, 0] }}
-              transition={{ duration: 1, repeat: Infinity, repeatDelay: 1 }}
+              className="inline-flex items-center gap-2 rounded-full bg-secondary px-8 py-4 font-bold text-white transition-colors hover:bg-secondary/90"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
             >
-              <ArrowRight className="h-5 w-5" />
+              Let's Talk About Your Project
+              <motion.span
+                animate={{ x: [0, 5, 0] }}
+                transition={{ duration: 1, repeat: Infinity, repeatDelay: 1 }}
+              >
+                <ArrowRight className="h-5 w-5" />
+              </motion.span>
             </motion.span>
-          </motion.button>
+          </Link>
         </motion.div>
       </div>
     </section>

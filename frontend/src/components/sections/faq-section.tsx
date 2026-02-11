@@ -44,6 +44,8 @@ function FAQItem({
     >
       <button
         onClick={onToggle}
+        aria-expanded={isOpen}
+        aria-controls={`faq-answer-${index}`}
         className={cn(
           'flex w-full items-center justify-between gap-4 rounded-2xl p-5 text-left transition-all',
           isOpen ? 'bg-secondary text-white' : 'bg-white text-black hover:bg-primary/50'
@@ -59,9 +61,9 @@ function FAQItem({
           )}
         >
           {isOpen ? (
-            <Minus className={cn('h-5 w-5', isOpen ? 'text-white' : 'text-secondary')} />
+            <Minus className={cn('h-5 w-5', isOpen ? 'text-white' : 'text-secondary')} aria-hidden="true" />
           ) : (
-            <Plus className="h-5 w-5 text-secondary" />
+            <Plus className="h-5 w-5 text-secondary" aria-hidden="true" />
           )}
         </motion.div>
       </button>
@@ -69,13 +71,15 @@ function FAQItem({
       <AnimatePresence>
         {isOpen && (
           <motion.div
+            id={`faq-answer-${index}`}
+            role="region"
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3, ease: 'easeInOut' }}
           >
             <div className="rounded-b-2xl bg-white px-5 pb-5 pt-4">
-              <p className="text-black/70 leading-relaxed">{faq.answer}</p>
+              <p className="text-black/90 leading-relaxed">{faq.answer}</p>
             </div>
           </motion.div>
         )}

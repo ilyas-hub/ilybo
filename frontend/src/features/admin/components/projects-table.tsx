@@ -13,6 +13,14 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
 } from '@/lib/ui'
 import { Plus, Pencil, Trash2 } from 'lucide-react'
 import { useProjects, useDeleteProject } from '../hooks'
@@ -41,6 +49,7 @@ export function ProjectsTable() {
   const [page, setPage] = useState(1)
   const [editProject, setEditProject] = useState<Project | null>(null)
   const [showForm, setShowForm] = useState(false)
+  const [deleteId, setDeleteId] = useState<string | null>(null)
 
   const { data, isLoading } = useProjects({ page, limit: 10, status })
   const deleteProject = useDeleteProject()
@@ -48,9 +57,10 @@ export function ProjectsTable() {
   const projects = data?.data || []
   const pagination = data?.pagination
 
-  const handleDelete = async (id: string) => {
-    if (confirm('Are you sure you want to delete this project?')) {
-      await deleteProject.mutateAsync(id)
+  const handleDelete = async () => {
+    if (deleteId) {
+      await deleteProject.mutateAsync(deleteId)
+      setDeleteId(null)
     }
   }
 
@@ -159,7 +169,7 @@ export function ProjectsTable() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => handleDelete(project._id)}
+                        onClick={() => setDeleteId(project._id)}
                       >
                         <Trash2 className="h-4 w-4 text-destructive" />
                       </Button>
@@ -206,6 +216,26 @@ export function ProjectsTable() {
           setEditProject(null)
         }}
       />
+
+      <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Project</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this project? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

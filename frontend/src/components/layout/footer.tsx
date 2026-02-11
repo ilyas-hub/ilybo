@@ -1,7 +1,6 @@
 import { FOOTER_LINKS } from '@/shared/constants/navigation'
-import { Github, Twitter, Linkedin, Send, MapPin, Phone, Mail, Facebook, Instagram, Youtube, Globe } from 'lucide-react'
+import { Github, Twitter, Linkedin, MapPin, Phone, Mail, Facebook, Instagram, Youtube, Globe } from 'lucide-react'
 import { LogoText } from '@/components/brand'
-import { useState } from 'react'
 import { useContactInfo, useSocialLinks } from '@/features/cms'
 
 const SOCIAL_ICONS: Record<string, typeof Twitter> = {
@@ -20,19 +19,8 @@ const SOCIAL_ICONS: Record<string, typeof Twitter> = {
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
-  const [email, setEmail] = useState('')
-  const [isSubscribed, setIsSubscribed] = useState(false)
   const { contact, company } = useContactInfo()
   const { socialLinks } = useSocialLinks()
-
-  const handleSubscribe = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (email) {
-      setIsSubscribed(true)
-      setEmail('')
-      setTimeout(() => setIsSubscribed(false), 3000)
-    }
-  }
 
   return (
     <footer className="bg-primary">
@@ -43,7 +31,7 @@ export function Footer() {
             <a href="/" className="inline-flex items-center">
               <LogoText className="text-2xl" />
             </a>
-            <p className="text-sm leading-relaxed text-black/70">
+            <p className="text-sm leading-relaxed text-black/90">
               {company?.description || 'Building innovative software solutions that drive business growth and digital transformation.'}
             </p>
 
@@ -51,20 +39,20 @@ export function Footer() {
             <div className="space-y-2">
               <a
                 href={`mailto:${contact?.email || 'hello@ilybo.com'}`}
-                className="flex items-center gap-2 text-sm text-black/70 transition-colors hover:text-secondary"
+                className="flex items-center gap-2 text-sm text-black/90 transition-colors hover:text-secondary"
               >
-                <Mail className="h-4 w-4" />
+                <Mail className="h-4 w-4" aria-hidden="true" />
                 {contact?.email || 'hello@ilybo.com'}
               </a>
               <a
                 href={`tel:${contact?.phone?.replace(/\s/g, '') || '+919876543210'}`}
-                className="flex items-center gap-2 text-sm text-black/70 transition-colors hover:text-secondary"
+                className="flex items-center gap-2 text-sm text-black/90 transition-colors hover:text-secondary"
               >
-                <Phone className="h-4 w-4" />
+                <Phone className="h-4 w-4" aria-hidden="true" />
                 {contact?.phone || '+91 98765 43210'}
               </a>
-              <div className="flex items-center gap-2 text-sm text-black/70">
-                <MapPin className="h-4 w-4" />
+              <div className="flex items-center gap-2 text-sm text-black/90">
+                <MapPin className="h-4 w-4" aria-hidden="true" />
                 {contact?.address
                   ? `${contact.address.city}, ${contact.address.country}`
                   : 'Mumbai, India'}
@@ -104,7 +92,7 @@ export function Footer() {
                 <li key={link.href}>
                   <a
                     href={link.href}
-                    className="text-sm text-black/70 transition-colors hover:text-black"
+                    className="text-sm text-black/90 transition-colors hover:text-secondary"
                   >
                     {link.label}
                   </a>
@@ -123,7 +111,7 @@ export function Footer() {
                 <li key={link.label}>
                   <a
                     href={link.href}
-                    className="text-sm text-black/70 transition-colors hover:text-black"
+                    className="text-sm text-black/90 transition-colors hover:text-secondary"
                   >
                     {link.label}
                   </a>
@@ -132,35 +120,20 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Newsletter */}
+          {/* Follow Us */}
           <div className="space-y-4">
             <h4 className="text-sm font-bold uppercase tracking-wider text-black">
-              Stay Updated
+              Follow Us
             </h4>
-            <p className="text-sm text-black/70">
-              Get the latest insights on software development.
+            <p className="text-sm text-black/90">
+              Stay connected with us on social media for the latest updates and insights.
             </p>
-            <form onSubmit={handleSubscribe} className="space-y-2">
-              <div className="relative">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email"
-                  className="h-10 w-full rounded-lg border-2 border-black/10 bg-white pl-3 pr-10 text-sm transition-colors focus:border-secondary focus:outline-none"
-                  required
-                />
-                <button
-                  type="submit"
-                  className="absolute right-1 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-md bg-secondary text-white transition-colors hover:bg-secondary/90"
-                >
-                  <Send className="h-4 w-4" />
-                </button>
-              </div>
-              {isSubscribed && (
-                <p className="text-sm text-green-600">Thanks for subscribing!</p>
-              )}
-            </form>
+            <a
+              href="#contact"
+              className="inline-flex items-center gap-2 rounded-full bg-secondary px-5 py-2.5 text-sm font-bold text-white transition-colors hover:bg-secondary/90"
+            >
+              Get In Touch
+            </a>
           </div>
         </div>
 
@@ -170,10 +143,10 @@ export function Footer() {
             &copy; {currentYear} IlyBo. All rights reserved.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <a href="#" className="text-sm text-black/60 transition-colors hover:text-black">
+            <a href="/pages/privacy-policy" className="text-sm text-black/90 transition-colors hover:text-black">
               Privacy Policy
             </a>
-            <a href="#" className="text-sm text-black/60 transition-colors hover:text-black">
+            <a href="/pages/terms-of-service" className="text-sm text-black/90 transition-colors hover:text-black">
               Terms of Service
             </a>
           </div>

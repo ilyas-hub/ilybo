@@ -65,3 +65,18 @@ export const otpVerifyRateLimiter = rateLimit({
     },
   },
 })
+
+export const leadRateLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 10, // 10 submissions per hour per IP
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    error: {
+      message: 'Too many submissions, please try again later',
+      status: 'fail',
+      statusCode: 429,
+    },
+  },
+})

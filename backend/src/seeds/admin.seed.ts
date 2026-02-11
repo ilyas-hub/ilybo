@@ -1,16 +1,7 @@
 import { User } from '../modules/users/index.js'
 import { hashPassword, logger } from '../utils/index.js'
 import { getAdminData } from './data/admin.data.js'
-
-// Additional admin users to seed
-const additionalAdmins = [
-  {
-    email: 'shaikhilyas387@gmail.com',
-    password: 'ilyas@123',
-    name: 'Ilyas Shaikh',
-    role: 'admin' as const,
-  },
-]
+import { env } from '../config/env.js'
 
 export async function seedAdmin(): Promise<void> {
   logger.info('Seeding admin users...')
@@ -23,9 +14,14 @@ export async function seedAdmin(): Promise<void> {
     logger.info('Env admin skipped: ADMIN_EMAIL or ADMIN_PASSWORD not set')
   }
 
-  // Seed additional admins
-  for (const admin of additionalAdmins) {
-    await createAdminIfNotExists(admin)
+  // Seed additional admins from env vars
+  if (env.SEED_ADMIN_EMAIL && env.SEED_ADMIN_PASSWORD) {
+    await createAdminIfNotExists({
+      email: env.SEED_ADMIN_EMAIL,
+      password: env.SEED_ADMIN_PASSWORD,
+      name: env.SEED_ADMIN_NAME || 'Admin',
+      role: 'admin' as const,
+    })
   }
 }
 

@@ -99,7 +99,7 @@ export function ReviewsSection() {
                     animate={{ rotate: [0, 5, -5, 0] }}
                     transition={{ duration: 4, repeat: Infinity, delay: index * 0.3 }}
                   >
-                    <Quote className="mb-4 h-10 w-10 text-secondary/30" />
+                    <Quote className="mb-4 h-10 w-10 text-secondary/30" aria-hidden="true" />
                   </motion.div>
 
                   {/* Header with avatar */}
@@ -114,12 +114,12 @@ export function ReviewsSection() {
                     </motion.div>
                     <div>
                       <h4 className="font-bold text-secondary">{review.name}</h4>
-                      <p className="text-sm text-black/50">{review.company}</p>
+                      <p className="text-sm text-black/70">{review.company}</p>
                     </div>
                   </div>
 
                   {/* Review text */}
-                  <p className="text-black/70">{review.review}</p>
+                  <p className="text-black/80">{review.review}</p>
 
                   {/* Read more link */}
                   <button className="mt-4 font-bold text-secondary hover:underline">
@@ -137,8 +137,9 @@ export function ReviewsSection() {
                   className="flex h-12 w-12 items-center justify-center rounded-full bg-primary shadow-md transition-all hover:bg-secondary hover:text-white"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
+                  aria-label="Previous testimonial"
                 >
-                  <ChevronLeft className="h-6 w-6" />
+                  <ChevronLeft className="h-6 w-6" aria-hidden="true" />
                 </motion.button>
 
                 {/* Dots */}
@@ -147,13 +148,15 @@ export function ReviewsSection() {
                     <motion.button
                       key={index}
                       onClick={() => setCurrentIndex(index)}
-                      className={`h-2 rounded-full transition-all ${
+                      className={`h-3 rounded-full transition-all ${
                         index === currentIndex
                           ? 'w-8 bg-secondary'
-                          : 'w-2 bg-black/20 hover:bg-black/40'
+                          : 'w-3 bg-black/30 hover:bg-black/50'
                       }`}
+                      style={{ minWidth: '44px', minHeight: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                       whileHover={{ scale: 1.2 }}
                       whileTap={{ scale: 0.9 }}
+                      aria-label={`Go to testimonial ${index + 1}`}
                     />
                   ))}
                 </div>
@@ -163,8 +166,9 @@ export function ReviewsSection() {
                   className="flex h-12 w-12 items-center justify-center rounded-full bg-primary shadow-md transition-all hover:bg-secondary hover:text-white"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
+                  aria-label="Next testimonial"
                 >
-                  <ChevronRight className="h-6 w-6" />
+                  <ChevronRight className="h-6 w-6" aria-hidden="true" />
                 </motion.button>
               </div>
             )}

@@ -15,7 +15,8 @@ import {
   CheckCircle2,
 } from 'lucide-react'
 import { motion, AnimatePresence, useInView } from 'motion/react'
-import { openProjectWizard } from './project-wizard-section'
+import { Link } from '@tanstack/react-router'
+import { START_PROJECT_PATH } from './open-project-wizard'
 
 const JOURNEY_STEPS = [
   {
@@ -92,14 +93,14 @@ export function JourneySection() {
   const [direction, setDirection] = useState(1)
   const sectionRef = useRef<HTMLElement>(null)
   const isInView = useInView(sectionRef, { once: true, margin: '-50px' })
-  const progressRef = useRef<NodeJS.Timeout | null>(null)
+  const rafRef = useRef<number | null>(null)
 
   useEffect(() => {
     if (!isPlaying || !isInView) return
 
-    const startTime = Date.now()
-    const animate = () => {
-      const elapsed = Date.now() - startTime
+    const startTime = performance.now()
+    const animate = (now: number) => {
+      const elapsed = now - startTime
       const newProgress = (elapsed / AUTOPLAY_DURATION) * 100
 
       if (newProgress >= 100) {
@@ -108,13 +109,13 @@ export function JourneySection() {
         setActiveStep((prev) => (prev + 1) % JOURNEY_STEPS.length)
       } else {
         setProgress(newProgress)
-        progressRef.current = setTimeout(animate, 16)
+        rafRef.current = requestAnimationFrame(animate)
       }
     }
 
-    progressRef.current = setTimeout(animate, 16)
+    rafRef.current = requestAnimationFrame(animate)
     return () => {
-      if (progressRef.current) clearTimeout(progressRef.current)
+      if (rafRef.current) cancelAnimationFrame(rafRef.current)
     }
   }, [isPlaying, activeStep, isInView])
 
@@ -237,7 +238,7 @@ export function JourneySection() {
                       >
                         Step {currentStep.number} of 7
                       </span>
-                      <span className="text-xs text-white/40">{currentStep.subtitle}</span>
+                      <span className="text-xs text-white/60">{currentStep.subtitle}</span>
                     </div>
 
                     <h3 className="mb-2 text-2xl font-black text-white sm:text-3xl">
@@ -277,11 +278,11 @@ export function JourneySection() {
                 {isPlaying ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5 ml-0.5" />}
               </motion.button>
 
-              <button onClick={handlePrev} className="p-1 text-white/50 hover:text-white">
-                <ChevronLeft className="h-4 w-4" />
+              <button onClick={handlePrev} className="p-2 text-white/50 hover:text-white" aria-label="Previous step">
+                <ChevronLeft className="h-4 w-4" aria-hidden="true" />
               </button>
-              <button onClick={handleNext} className="p-1 text-white/50 hover:text-white">
-                <ChevronRight className="h-4 w-4" />
+              <button onClick={handleNext} className="p-2 text-white/50 hover:text-white" aria-label="Next step">
+                <ChevronRight className="h-4 w-4" aria-hidden="true" />
               </button>
 
               {/* Progress */}
@@ -290,17 +291,20 @@ export function JourneySection() {
                   <button
                     key={i}
                     onClick={() => handleStepClick(i)}
-                    className="group relative h-1 flex-1 rounded-full bg-white/10"
+                    className="group relative flex h-6 flex-1 items-center"
+                    aria-label={`Go to step ${i + 1}: ${step.title}`}
                   >
-                    {i < activeStep && (
-                      <div className="h-full w-full rounded-full" style={{ backgroundColor: step.color }} />
-                    )}
-                    {i === activeStep && (
-                      <div
-                        className="h-full rounded-full transition-all"
-                        style={{ backgroundColor: step.color, width: `${progress}%` }}
-                      />
-                    )}
+                    <div className="h-1 w-full rounded-full bg-white/10">
+                      {i < activeStep && (
+                        <div className="h-full w-full rounded-full" style={{ backgroundColor: step.color }} />
+                      )}
+                      {i === activeStep && (
+                        <div
+                          className="h-full rounded-full transition-all"
+                          style={{ backgroundColor: step.color, width: `${progress}%` }}
+                        />
+                      )}
+                    </div>
                     <span className="absolute -top-6 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-white px-1.5 py-0.5 text-[10px] font-bold text-black opacity-0 transition-opacity group-hover:opacity-100">
                       {step.title}
                     </span>
@@ -344,15 +348,16 @@ export function JourneySection() {
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ delay: 0.3 }}
         >
-          <motion.button
-            onClick={openProjectWizard}
-            className="inline-flex items-center gap-2 rounded-full bg-black px-8 py-4 font-bold text-primary shadow-xl"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            Start Your Journey
-            <ArrowRight className="h-4 w-4" />
-          </motion.button>
+          <Link to={START_PROJECT_PATH}>
+            <motion.span
+              className="inline-flex items-center gap-2 rounded-full bg-black px-8 py-4 font-bold text-primary shadow-xl"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              Start Your Journey
+              <ArrowRight className="h-4 w-4" />
+            </motion.span>
+          </Link>
         </motion.div>
       </div>
     </section>

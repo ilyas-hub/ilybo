@@ -7,4 +7,5 @@ export {
   authRateLimiter,
   passwordResetRateLimiter,
   otpVerifyRateLimiter,
+  leadRateLimiter,
 } from './rate-limit.middleware.js'

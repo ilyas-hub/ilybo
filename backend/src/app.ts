@@ -2,6 +2,7 @@ import express, { type Express, type Request, type Response, type NextFunction }
 import cors from 'cors'
 import helmet from 'helmet'
 import compression from 'compression'
+import cookieParser from 'cookie-parser'
 import mongoose from 'mongoose'
 
 import { env, API_PREFIX } from './config/index.js'
@@ -58,10 +59,21 @@ export function createApp(): Express {
   const app = express()
 
   // Security middlewares
-  app.use(helmet())
+  app.use(helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'"],
+        styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+        fontSrc: ["'self'", "https://fonts.gstatic.com"],
+        imgSrc: ["'self'", "data:", "https:", "blob:"],
+        connectSrc: ["'self'", ...env.CORS_ORIGINS.split(',').map(o => o.trim())],
+      },
+    },
+  }))
   app.use(
     cors({
-      origin: env.CORS_ORIGINS.split(','),
+      origin: env.CORS_ORIGINS.split(',').map(o => o.trim()),
       credentials: true,
     })
   )
@@ -69,9 +81,12 @@ export function createApp(): Express {
   // Rate limiting
   app.use(rateLimiter)
 
+  // Cookie parsing
+  app.use(cookieParser())
+
   // Body parsing
-  app.use(express.json({ limit: '10kb' }))
-  app.use(express.urlencoded({ extended: true, limit: '10kb' }))
+  app.use(express.json({ limit: '50kb' }))
+  app.use(express.urlencoded({ extended: true, limit: '50kb' }))
 
   // MongoDB sanitization (after body parsing)
   app.use(mongoSanitizeMiddleware)

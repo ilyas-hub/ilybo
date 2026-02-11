@@ -20,8 +20,10 @@ export function ContactSection() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    phone: '',
     company: '',
     message: '',
+    website: '',
   })
 
   const handleChange = (
@@ -38,7 +40,7 @@ export function ContactSection() {
 
     try {
       await apiClient.post('/leads', formData)
-      setFormData({ name: '', email: '', company: '', message: '' })
+      setFormData({ name: '', email: '', phone: '', company: '', message: '', website: '' })
       setSubmitStatus('success')
     } catch {
       setSubmitStatus('error')
@@ -84,13 +86,20 @@ export function ContactSection() {
                   animate={{ rotate: [0, 5, -5, 0] }}
                   transition={{ duration: 3, repeat: Infinity }}
                 >
-                  <Mail className="h-6 w-6" />
+                  <Mail className="h-6 w-6" aria-hidden="true" />
                 </motion.div>
                 <div>
                   <p className="font-bold text-black">Email</p>
-                  <p className="text-sm text-black/60">
-                    {isLoading ? '...' : contact?.email || 'hello@ilybo.com'}
-                  </p>
+                  {isLoading ? (
+                    <p className="text-sm text-black/60">...</p>
+                  ) : (
+                    <a
+                      href={`mailto:${contact?.email || 'hello@ilybo.com'}`}
+                      className="text-sm text-black/60 transition-colors hover:text-secondary"
+                    >
+                      {contact?.email || 'hello@ilybo.com'}
+                    </a>
+                  )}
                 </div>
               </div>
             </motion.div>
@@ -108,13 +117,20 @@ export function ContactSection() {
                   animate={{ scale: [1, 1.1, 1] }}
                   transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
                 >
-                  <Phone className="h-6 w-6" />
+                  <Phone className="h-6 w-6" aria-hidden="true" />
                 </motion.div>
                 <div>
                   <p className="font-bold text-black">Phone</p>
-                  <p className="text-sm text-black/60">
-                    {isLoading ? '...' : contact?.phone || '+91 98765 43210'}
-                  </p>
+                  {isLoading ? (
+                    <p className="text-sm text-black/60">...</p>
+                  ) : (
+                    <a
+                      href={`tel:${(contact?.phone || '+91 98765 43210').replace(/\s/g, '')}`}
+                      className="text-sm text-black/60 transition-colors hover:text-secondary"
+                    >
+                      {contact?.phone || '+91 98765 43210'}
+                    </a>
+                  )}
                 </div>
               </div>
             </motion.div>
@@ -132,7 +148,7 @@ export function ContactSection() {
                   animate={{ y: [0, -5, 0] }}
                   transition={{ duration: 2, repeat: Infinity, delay: 1 }}
                 >
-                  <MapPin className="h-6 w-6" />
+                  <MapPin className="h-6 w-6" aria-hidden="true" />
                 </motion.div>
                 <div>
                   <p className="font-bold text-black">Location</p>
@@ -193,7 +209,7 @@ export function ContactSection() {
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    className="h-12 rounded-xl border-2 border-black/10 bg-primary/20 text-black placeholder:text-black/40 focus:border-secondary"
+                    className="h-12 rounded-xl border-2 border-black/10 bg-primary/20 text-black placeholder:text-black/60 focus:border-secondary"
                   />
                 </div>
                 <div className="space-y-2">
@@ -208,21 +224,50 @@ export function ContactSection() {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="h-12 rounded-xl border-2 border-black/10 bg-primary/20 text-black placeholder:text-black/40 focus:border-secondary"
+                    className="h-12 rounded-xl border-2 border-black/10 bg-primary/20 text-black placeholder:text-black/60 focus:border-secondary"
                   />
                 </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="company" className="font-bold text-black">
-                  Company (Optional)
-                </Label>
+              <div className="grid gap-6 sm:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="phone" className="font-bold text-black">
+                    Phone (Optional)
+                  </Label>
+                  <Input
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    placeholder="+1 (555) 000-0000"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className="h-12 rounded-xl border-2 border-black/10 bg-primary/20 text-black placeholder:text-black/60 focus:border-secondary"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="company" className="font-bold text-black">
+                    Company (Optional)
+                  </Label>
+                  <Input
+                    id="company"
+                    name="company"
+                    placeholder="Your Company"
+                    value={formData.company}
+                    onChange={handleChange}
+                    className="h-12 rounded-xl border-2 border-black/10 bg-primary/20 text-black placeholder:text-black/60 focus:border-secondary"
+                  />
+                </div>
+              </div>
+              {/* Honeypot field - hidden from real users */}
+              <div style={{ position: 'absolute', left: '-9999px', opacity: 0 }}>
+                <Label htmlFor="website">Website</Label>
                 <Input
-                  id="company"
-                  name="company"
-                  placeholder="Your Company"
-                  value={formData.company}
+                  id="website"
+                  name="website"
+                  type="text"
+                  value={formData.website}
                   onChange={handleChange}
-                  className="h-12 rounded-xl border-2 border-black/10 bg-primary/20 text-black placeholder:text-black/40 focus:border-secondary"
+                  tabIndex={-1}
+                  autoComplete="off"
                 />
               </div>
               <div className="space-y-2">
@@ -237,7 +282,7 @@ export function ContactSection() {
                   value={formData.message}
                   onChange={handleChange}
                   required
-                  className="rounded-xl border-2 border-black/10 bg-primary/20 text-black placeholder:text-black/40 focus:border-secondary"
+                  className="rounded-xl border-2 border-black/10 bg-primary/20 text-black placeholder:text-black/60 focus:border-secondary"
                 />
               </div>
               <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>

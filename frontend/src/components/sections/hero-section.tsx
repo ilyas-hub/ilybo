@@ -2,7 +2,8 @@ import { ArrowRight, Play, Star, Rocket, CheckCircle, Terminal } from 'lucide-re
 import { Button } from '@/lib/ui'
 import { motion } from 'motion/react'
 import { useState, useEffect } from 'react'
-import { openProjectWizard } from './project-wizard-section'
+import { Link } from '@tanstack/react-router'
+import { START_PROJECT_PATH } from './open-project-wizard'
 
 // Client-centric code showcasing secure & efficient delivery
 const CODE_LINES = [
@@ -385,10 +386,10 @@ export function HeroSection() {
                 animate={{ rotate: [0, 15, -15, 0] }}
                 transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 2 }}
               >
-                <Rocket className="h-4 w-4 text-secondary" />
+                <Rocket className="h-4 w-4 text-secondary" aria-hidden="true" />
               </motion.span>
               <span className="text-sm font-medium text-black">
-                Partnered with 100+ brands globally
+                Trusted by 50+ clients globally
               </span>
             </motion.div>
 
@@ -424,17 +425,19 @@ export function HeroSection() {
             >
               <Button
                 size="lg"
+                asChild
                 className="group h-12 rounded-full bg-secondary px-6 text-base font-bold text-white shadow-lg transition-all hover:bg-secondary/90 hover:shadow-xl"
-                onClick={openProjectWizard}
               >
-                Start Your Project
-                <motion.span
-                  className="ml-2"
-                  animate={{ x: [0, 5, 0] }}
-                  transition={{ duration: 1, repeat: Infinity, repeatDelay: 1 }}
-                >
-                  <ArrowRight className="h-5 w-5" />
-                </motion.span>
+                <Link to={START_PROJECT_PATH}>
+                  Start Your Project
+                  <motion.span
+                    className="ml-2"
+                    animate={{ x: [0, 5, 0] }}
+                    transition={{ duration: 1, repeat: Infinity, repeatDelay: 1 }}
+                  >
+                    <ArrowRight className="h-5 w-5" />
+                  </motion.span>
+                </Link>
               </Button>
               <Button
                 size="lg"
@@ -459,7 +462,7 @@ export function HeroSection() {
                 <div className="flex -space-x-2">
                   {['JD', 'MK', 'AS', 'RB'].map((initials, i) => (
                     <motion.div
-                      key={i}
+                      key={initials}
                       className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-primary bg-black text-xs font-bold text-white"
                       initial={{ scale: 0, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
@@ -471,9 +474,9 @@ export function HeroSection() {
                   ))}
                 </div>
                 <div className="ml-2">
-                  <div className="flex items-center gap-0.5">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-3.5 w-3.5 fill-black text-black" />
+                  <div className="flex items-center gap-0.5" aria-label="5 out of 5 stars" role="img">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star key={star} className="h-3.5 w-3.5 fill-black text-black" aria-hidden="true" />
                     ))}
                   </div>
                   <p className="text-xs text-black/60">50+ happy clients</p>
