@@ -4,6 +4,8 @@ import helmet from 'helmet'
 import compression from 'compression'
 import cookieParser from 'cookie-parser'
 import mongoose from 'mongoose'
+import path from 'path'
+import { fileURLToPath } from 'url'
 
 import { env, API_PREFIX } from './config/index.js'
 import { errorMiddleware, rateLimiter } from './middlewares/index.js'
@@ -94,6 +96,12 @@ export function createApp(): Express {
   // Compression
   app.use(compression())
 
+  // Serve frontend static files
+  const __filename = fileURLToPath(import.meta.url)
+  const __dirname = path.dirname(__filename)
+  const frontendDist = path.resolve(__dirname, '../../frontend/dist')
+  app.use(express.static(frontendDist))
+
   // Health check routes
   app.get('/health', (_req: Request, res: Response) => {
     res.status(200).json({
@@ -145,8 +153,8 @@ export function createApp(): Express {
   app.use(`${API_PREFIX}/faqs`, faqRoutes)
   app.use(`${API_PREFIX}/testimonials`, testimonialRoutes)
 
-  // 404 handler
-  app.use((_req: Request, res: Response) => {
+  // API 404 handler
+  app.use(`${API_PREFIX}`, (_req: Request, res: Response) => {
     res.status(404).json({
       success: false,
       error: {
@@ -155,6 +163,11 @@ export function createApp(): Express {
         statusCode: 404,
       },
     })
+  })
+
+  // SPA catch-all — serve index.html for all non-API routes
+  app.use((_req: Request, res: Response) => {
+    res.sendFile(path.join(frontendDist, 'index.html'))
   })
 
   // Error handler
